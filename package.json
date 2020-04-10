@@ -1,17 +1,20 @@
 {
-  "name": "forestgame-client",
+  "name": "forestgame",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "webpack --mode development",
-    "prod": "webpack --mode production"
+    "client": "webpack --config client/webpack.config.js --watch --mode development",
+    "server": "nodemon --watch server/main.py --watch dist --exec \"python server/main.py\""
   },
   "author": "",
   "license": "ISC",
   "dependencies": {},
   "devDependencies": {
+    "nodemon": "^2.0.2",
     "eslint": "^6.8.0",
     "eslint-config-google": "^0.14.0",
     "html-webpack-plugin": "^4.0.3",
