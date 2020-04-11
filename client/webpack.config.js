@@ -1,11 +1,32 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const {VueLoaderPlugin} = require("vue-loader");
 
 module.exports = {
   entry: [path.resolve(__dirname, "src/index.js")],
   output: {
     filename: "game.js",
     path: path.resolve(__dirname, "..", "dist"),
+  },
+  module: {
+    rules: [
+      {
+        test: /\.vue$/,
+        use: "vue-loader",
+      },
+      {
+        test: /\.css$/,
+        use: [
+          "vue-style-loader",
+          "css-loader",
+        ],
+      },
+    ],
+  },
+  resolve: {
+    alias: {
+      vue: "vue/dist/vue.js",
+    },
   },
   devtool: "inline-source-map",
   devServer: {
@@ -16,6 +37,10 @@ module.exports = {
     overlay: true,
   },
   plugins: [
-    new HtmlWebpackPlugin(),
+    new HtmlWebpackPlugin({
+      title: "Forest Game",
+      template: path.resolve(__dirname, "index.html"),
+    }),
+    new VueLoaderPlugin(),
   ],
 };

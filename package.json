@@ -7,17 +7,24 @@
     "doc": "docs"
   },
   "scripts": {
-    "client": "webpack --config client/webpack.config.js --watch --mode development",
+    "client": "nodemon --watch client/webpack.config.js --exec \"webpack --config client/webpack.config.js --watch --mode development\"",
     "server": "nodemon --watch server/main.py --watch dist --exec \"python server/main.py\""
   },
   "author": "",
   "license": "ISC",
-  "dependencies": {},
+  "dependencies": {
+    "vue": "^2.6.11",
+    "vue-router": "^3.1.6"
+  },
   "devDependencies": {
-    "nodemon": "^2.0.2",
+    "css-loader": "^3.5.2",
     "eslint": "^6.8.0",
     "eslint-config-google": "^0.14.0",
     "html-webpack-plugin": "^4.0.3",
+    "nodemon": "^2.0.2",
+    "vue-loader": "^15.9.1",
+    "vue-style-loader": "^4.1.2",
+    "vue-template-compiler": "^2.6.11",
     "webpack": "^4.42.1",
     "webpack-cli": "^3.3.11"
   }

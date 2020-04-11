@@ -23,6 +23,7 @@ def set_client_id_token(resp, token):
     resp.set_cookie(CLIENT_ID_COOKIE_KEY, value=token, max_age=CLIENT_ID_COOKIE_EXPIRATION, httponly=True)
 
 @app.route('/', methods = ["GET"])
+@app.route('/create-game', methods = ["GET"])
 @app.route('/index.html', methods = ["GET"])
 def root_html():
     player_id = get_client_id_token(request)
