@@ -38,7 +38,7 @@ export default
     let setCanvasSize = () => {
       canvas.width = canvas.parentElement.clientWidth;
       canvas.height = canvas.parentElement.clientHeight;
-      canvas.style.width = canvas.width * 3;
+      canvas.style.width = canvas.width * 4;
     };
 
     window.addEventListener("resize", setCanvasSize);
