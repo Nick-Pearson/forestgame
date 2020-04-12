@@ -1,4 +1,5 @@
 import {loadAllTiles, TILE_SIZE} from "../tile/index.js";
+import {Random} from "../math/random.js";
 
 class WorldRenderer
 {
@@ -8,12 +9,13 @@ class WorldRenderer
     this.world = world;
     this.context.imageSmoothingEnabled = false;
     this.tiles = loadAllTiles(() => this.render());
-    this.tileIdToTile = [
+    this.tileIdToTiles = [
       this.tiles.base,
       this.tiles.forest,
       this.tiles.clearing,
       this.tiles.mountains,
     ];
+    this.seed = Math.floor(Math.random() * 10000000);
   }
 
   render()
@@ -21,14 +23,15 @@ class WorldRenderer
     const maxX = this.world.getSizeX();
     const maxY = this.world.getSizeY();
     const tileData = this.world.getTileData();
+    const rand = new Random(this.seed);
 
     for (let x = maxX - 1; x >= 0; x--)
     {
       for (let y = 0; y < maxY; y++)
       {
         const tileId = tileData[x][y];
-        const tile = this.tileIdToTile[tileId];
-        this.context.drawImage(tile[0], TILE_SIZE * x, (TILE_SIZE * y) -2);
+        const tiles = this.tileIdToTiles[tileId];
+        this.context.drawImage(tiles[rand.nextInt(tiles.length)], TILE_SIZE * x, (TILE_SIZE * y) -2);
       }
     }
   }
