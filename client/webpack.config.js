@@ -7,6 +7,7 @@ module.exports = {
   output: {
     filename: "game.js",
     path: path.resolve(__dirname, "..", "dist"),
+    publicPath: "/",
   },
   module: {
     rules: [

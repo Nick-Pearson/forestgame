@@ -35,7 +35,7 @@ function createGame(e)
   }
 
   model.creating = true;
-  restRequest("POST", "/game", (response) => {
+  restRequest({method: "POST", path: "/game"}, (response) => {
     model.creating = false;
 
     if (response.status === 200)

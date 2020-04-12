@@ -16,9 +16,9 @@ function parseJsonOrNull(string)
   }
 }
 
-function restRequest(method, path, onResponse)
+function restRequest(req, onResponse)
 {
-  console.log("New REST request " + method + " /api" + path);
+  console.log("New REST request " + req.method + " /api" + req.path);
   const xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function()
   {
@@ -28,8 +28,16 @@ function restRequest(method, path, onResponse)
       onResponse(new Response(this.status, responseBody));
     }
   };
-  xhttp.open(method, "/api" + path, true);
-  xhttp.send();
+  xhttp.open(req.method, "/api" + req.path, true);
+  if (req.body !== undefined && req.body != null)
+  {
+    xhttp.setRequestHeader("Content-type", "application/json");
+    xhttp.send(JSON.stringify(req.body));
+  }
+  else
+  {
+    xhttp.send();
+  }
 }
 
 export {restRequest};
