@@ -35,6 +35,10 @@ def no_params_page(u_path):
 def static_script():
     return send_from_directory('../dist', 'game.js')
 
+@app.route('/assets/<path:u_path>')
+def static_assets(u_path):
+    return send_file('../dist/assets/' + u_path)
+
 @app.route('/api/game', methods = ["POST"])
 def create_game():
     return { "game_id":"6ae9e011-55ce-47f2-86a5-4c713d0f94fe" }
