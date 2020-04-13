@@ -1,5 +1,8 @@
 <template>
-  <canvas ref="main-canvas"></canvas>
+  <div>
+    <canvas ref="main-canvas" class="main-canvas"></canvas>
+    <canvas ref="ui-canvas" class="ui-canvas"></canvas>
+  </div>
 </template>
 
 <style>
@@ -17,28 +20,53 @@ html, body
 
 canvas
 {
+  position: absolute;
+  top: 0;
+}
+
+.main-canvas
+{
   image-rendering: -moz-crisp-edges;
   image-rendering: -webkit-crisp-edges;
   image-rendering: pixelated;
   image-rendering: crisp-edges;
+  z-index: 100;
+}
+
+.ui-canvas
+{
+  z-index: 200;
 }
 </style>
 
 <script>
-import {WorldRenderer} from "../src/renderer/index.js";
+import {WorldRenderer} from "../src/renderer/worldrenderer.js";
+import {UIRenderer} from "../src/renderer/uirenderer.js";
 import {World} from "../src/world/index.js";
 
 export default 
 {
   mounted () 
   {
-    const canvas = this.$refs['main-canvas'];
-    this.renderer = new WorldRenderer(canvas.getContext('2d'), new World());
+    const WORLD_SCALE = 4;
+    const UI_SCALE = 1;
+
+    const mainCanvas = this.$refs['main-canvas'];
+    const worldRenderer = new WorldRenderer(mainCanvas.getContext('2d'), new World());
+
+    const uiCanvas = this.$refs['ui-canvas'];
+    const uiRenderer = new UIRenderer(uiCanvas.getContext('2d'), WORLD_SCALE, UI_SCALE);
+
+    const appContainer = mainCanvas.parentElement.parentElement;
 
     let setCanvasSize = () => {
-      canvas.width = canvas.parentElement.clientWidth;
-      canvas.height = canvas.parentElement.clientHeight;
-      canvas.style.width = canvas.width * 4;
+      mainCanvas.width = appContainer.clientWidth;
+      mainCanvas.height = appContainer.clientHeight;
+
+      uiCanvas.width = appContainer.clientWidth;
+      uiCanvas.height = appContainer.clientHeight;
+
+      mainCanvas.style.width = mainCanvas.width * WORLD_SCALE;
     };
 
     window.addEventListener("resize", setCanvasSize);

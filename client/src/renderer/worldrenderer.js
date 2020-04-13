@@ -7,6 +7,7 @@ class WorldRenderer
   {
     this.context = context;
     this.world = world;
+
     this.context.imageSmoothingEnabled = false;
     this.tiles = loadAllTiles(() => this.render());
     this.tileIdToTiles = [
@@ -24,6 +25,8 @@ class WorldRenderer
 
   render()
   {
+    this.context.clearRect(0, 0, this.context.canvas.width, this.context.canvas.height);
+
     const maxX = this.world.getSizeX();
     const maxY = this.world.getSizeY();
     const tileData = this.world.getTileData();

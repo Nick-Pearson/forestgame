@@ -17,7 +17,7 @@ class World
     {
       this.buildings.push(new Array(this.getSizeX()).fill(null));
     }
-    WorldData.buildings.forEach((building) => 
+    WorldData.buildings.forEach((building) =>
     {
       const x = building.x;
       const y = building.y;
