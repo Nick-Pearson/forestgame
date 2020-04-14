@@ -40,6 +40,7 @@ canvas
 </style>
 
 <script>
+import {ForestGame} from "../src/forestgame.js";
 import {WorldRenderer} from "../src/renderer/worldrenderer.js";
 import {UIRenderer} from "../src/renderer/uirenderer.js";
 import {World} from "../src/world/index.js";
@@ -48,14 +49,16 @@ export default
 {
   mounted () 
   {
+    const game = new ForestGame();
+
     const WORLD_SCALE = 4;
     const UI_SCALE = 1;
 
     const mainCanvas = this.$refs['main-canvas'];
-    const worldRenderer = new WorldRenderer(mainCanvas.getContext('2d'), new World());
+    const worldRenderer = new WorldRenderer(mainCanvas.getContext('2d'), game.world);
 
     const uiCanvas = this.$refs['ui-canvas'];
-    const uiRenderer = new UIRenderer(uiCanvas.getContext('2d'), WORLD_SCALE, UI_SCALE);
+    const uiRenderer = new UIRenderer(uiCanvas.getContext('2d'), game, WORLD_SCALE, UI_SCALE);
 
     const appContainer = mainCanvas.parentElement.parentElement;
 
@@ -67,6 +70,8 @@ export default
       uiCanvas.height = appContainer.clientHeight;
 
       mainCanvas.style.width = mainCanvas.width * WORLD_SCALE;
+      worldRenderer.render();
+      uiRenderer.render();
     };
 
     window.addEventListener("resize", setCanvasSize);
