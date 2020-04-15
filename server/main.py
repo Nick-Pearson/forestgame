@@ -45,7 +45,22 @@ def create_game():
 
 @app.route('/api/game/<game_id>/player-name', methods = ["PUT"])
 def change_name(game_id):
-    return {}
+    requestData = request.get_json();
+    return {"name": requestData["name"]};
+
+@app.route('/api/game/<game_id>/player-name', methods = ["GET"])
+def get_name(game_id):
+    return {"name": "The player's name"};
+
+@app.route('/api/game/<game_id>/player-stats', methods = ["GET"])
+def get_player_stats(game_id):
+    stats = {
+        "population": 150,
+        "wood": 25,
+        "coin": 110,
+        "food": 10
+    };
+    return {"stats": stats};
 
 if __name__ == "__main__":
     print("Starting server");

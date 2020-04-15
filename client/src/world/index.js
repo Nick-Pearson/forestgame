@@ -21,8 +21,6 @@ class World
     {
       const x = building.x;
       const y = building.y;
-      building.x = undefined;
-      building.y = undefined;
       this.buildings[y][x] = building;
     });
   }

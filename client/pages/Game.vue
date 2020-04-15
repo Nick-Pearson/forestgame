@@ -49,7 +49,8 @@ export default
 {
   mounted () 
   {
-    const game = new ForestGame();
+    const gameId = this.$route.params.gameId;
+    const game = new ForestGame(gameId);
 
     const WORLD_SCALE = 4;
     const UI_SCALE = 1;

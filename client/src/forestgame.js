@@ -3,10 +3,12 @@ import {PlayerStats} from "./player/playerstats.js";
 
 class ForestGame
 {
-  constructor()
+  constructor(gameId)
   {
+    this.gameId = gameId;
+
     this.world = new World();
-    this.playerStats = new PlayerStats();
+    this.playerStats = new PlayerStats(gameId);
     this.playerStats.refresh();
   };
 }
