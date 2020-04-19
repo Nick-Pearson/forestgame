@@ -8,7 +8,7 @@
   },
   "scripts": {
     "client": "nodemon --watch client/webpack.config.js --exec \"webpack --config client/webpack.config.js --watch --mode development\"",
-    "server": "nodemon --watch server/src --watch dist --exec \"python server/src/main.py\""
+    "server": "nodemon --watch server/src --watch dist --exec \"python server/main.py\""
   },
   "author": "",
   "license": "ISC",
