@@ -18,7 +18,7 @@ class PlayerNameTest(unittest.TestCase):
 
     def test_get_for_non_existant_game_returns_not_found(self):
         with self.assertRaises(ResourceNotFoundException) as context:
-            putResp = self.handler.get_name(Request(CLIENT_ID, {"game_id": GAME_ID}));
+            self.handler.get_name(Request(CLIENT_ID, {"game_id": GAME_ID}));
 
         self.assertEquals("Game not found", context.exception.message)
     
@@ -26,7 +26,7 @@ class PlayerNameTest(unittest.TestCase):
         game = self.game_registry.create_game(GAME_ID)
 
         with self.assertRaises(ResourceNotFoundException) as context:
-            putResp = self.handler.get_name(Request(CLIENT_ID, {"game_id": GAME_ID}));
+            self.handler.get_name(Request(CLIENT_ID, {"game_id": GAME_ID}));
 
         self.assertEquals("Game not found", context.exception.message)
 
@@ -34,13 +34,13 @@ class PlayerNameTest(unittest.TestCase):
         game = self.game_registry.create_game(GAME_ID)
         game.add_player(CLIENT_ID);
 
-        putResp = self.handler.get_name(Request(CLIENT_ID, {"game_id": GAME_ID}));
+        getResp = self.handler.get_name(Request(CLIENT_ID, {"game_id": GAME_ID}));
 
-        self.assertEquals("Player name", putResp["name"])
+        self.assertEquals("Player name", getResp["name"])
     
     def test_put_for_non_existant_game_returns_not_found(self):
         with self.assertRaises(ResourceNotFoundException) as context:
-            putResp = self.handler.change_name(Request(CLIENT_ID, {"game_id": GAME_ID}, {"name": "New Name"}));
+            self.handler.change_name(Request(CLIENT_ID, {"game_id": GAME_ID}, {"name": "New Name"}));
 
         self.assertEquals("Game not found", context.exception.message)
     
@@ -48,7 +48,7 @@ class PlayerNameTest(unittest.TestCase):
         game = self.game_registry.create_game(GAME_ID)
 
         with self.assertRaises(ResourceNotFoundException) as context:
-            putResp = self.handler.change_name(Request(CLIENT_ID, {"game_id": GAME_ID}, {"name": "New Name"}));
+            self.handler.change_name(Request(CLIENT_ID, {"game_id": GAME_ID}, {"name": "New Name"}));
 
         self.assertEquals("Game not found", context.exception.message)
 
@@ -79,6 +79,44 @@ class PlayerNameTest(unittest.TestCase):
         self.assertEquals("New Name", putResp["name"])
         getResp = self.handler.get_name(Request(CLIENT_ID, {"game_id": GAME_ID}, None));
         self.assertEquals("New Name", getResp["name"])
+
+class PlayerStatsTest(unittest.TestCase):
+    def __init__(self, methodName):
+        super(PlayerStatsTest, self).__init__(methodName)
+
+        self.game_registry = GameRegistry();
+        self.handler = PlayerHandler(self.game_registry);
+
+    def test_get_for_non_existant_game_returns_not_found(self):
+        with self.assertRaises(ResourceNotFoundException) as context:
+            self.handler.get_player_stats(Request(CLIENT_ID, {"game_id": GAME_ID}));
+        
+        self.assertEquals("Game not found", context.exception.message)
+    
+    def test_get_for_existant_game_but_not_this_client_returns_not_found(self):
+        game = self.game_registry.create_game(GAME_ID)
+
+        with self.assertRaises(ResourceNotFoundException) as context:
+            self.handler.get_player_stats(Request(CLIENT_ID, {"game_id": GAME_ID}));
+
+        self.assertEquals("Game not found", context.exception.message)
+    
+    def test_get_stats_returns_current_stats(self):
+        game = self.game_registry.create_game(GAME_ID)
+        player = game.add_player(CLIENT_ID);
+        player.population = 10;
+        player.wood = 20;
+        player.coin = 30;
+        player.food = 40;
+
+        getResp = self.handler.get_player_stats(Request(CLIENT_ID, {"game_id": GAME_ID}));
+
+        stats = getResp["stats"];
+        self.assertEquals(10, stats["population"]);
+        self.assertEquals(20, stats["wood"]);
+        self.assertEquals(30, stats["coin"]);
+        self.assertEquals(40, stats["food"]);
+
 
 if __name__ == '__main__':
     unittest.main()

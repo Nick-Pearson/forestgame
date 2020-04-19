@@ -6,6 +6,11 @@ class Player:
     self.id = player_id;
     self.name = "Player name";
 
+    self.population = 0;
+    self.wood = 0;
+    self.coin = 0;
+    self.food = 0;
+
 class Game:
     id = ""
 

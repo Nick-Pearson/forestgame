@@ -12,7 +12,7 @@ class PlayerHandler():
 
     player = game.get_player_for_client_id(client_id);
     if player == None:
-      raise ResourceNotFoundException("Game not found for " + client_id);
+      raise ResourceNotFoundException("Game not found");
 
     return player;
 
@@ -38,10 +38,14 @@ class PlayerHandler():
     return {"name": player.name};
     
   def get_player_stats(self, request):
+    game_id = request.path["game_id"];
+
+    player = self.lookup_player(game_id, request.client_id);
+
     stats = {
-        "population": 150,
-        "wood": 25,
-        "coin": 110,
-        "food": 10
+        "population": player.population,
+        "wood": player.wood,
+        "coin": player.coin,
+        "food": player.food
     };
     return {"stats": stats};
