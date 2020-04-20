@@ -50,16 +50,15 @@ export default
   mounted () 
   {
     const gameId = this.$route.params.gameId;
-    const game = new ForestGame(gameId);
+    const mainCanvas = this.$refs['main-canvas'];
+    const uiCanvas = this.$refs['ui-canvas'];
 
-    const WORLD_SCALE = 4;
+    const game = new ForestGame(gameId, mainCanvas);
+
     const UI_SCALE = 1;
 
-    const mainCanvas = this.$refs['main-canvas'];
     const worldRenderer = new WorldRenderer(mainCanvas.getContext('2d'), game.world);
-
-    const uiCanvas = this.$refs['ui-canvas'];
-    const uiRenderer = new UIRenderer(uiCanvas.getContext('2d'), game, WORLD_SCALE, UI_SCALE);
+    const uiRenderer = new UIRenderer(uiCanvas.getContext('2d'), game, UI_SCALE);
 
     const appContainer = mainCanvas.parentElement.parentElement;
 
@@ -70,7 +69,7 @@ export default
       uiCanvas.width = appContainer.clientWidth;
       uiCanvas.height = appContainer.clientHeight;
 
-      mainCanvas.style.width = mainCanvas.width * WORLD_SCALE;
+      mainCanvas.style.width = mainCanvas.width * game.world.worldScale;
       worldRenderer.render();
       uiRenderer.render();
     };

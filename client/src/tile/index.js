@@ -53,4 +53,9 @@ function loadImg(image, onload)
 
 const TILE_SIZE = 16;
 
-export {tileFilepaths, loadAllTiles, TILE_SIZE};
+const BASE_TILE_ID = 0;
+const FOREST_TILE_ID = 1;
+const CLEARING_TILE_ID = 2;
+const MOUNTAIN_TILE_ID = 3;
+
+export {tileFilepaths, loadAllTiles, TILE_SIZE, BASE_TILE_ID, FOREST_TILE_ID, CLEARING_TILE_ID, MOUNTAIN_TILE_ID};

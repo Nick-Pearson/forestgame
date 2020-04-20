@@ -21,6 +21,10 @@ class WorldRenderer
       this.tiles.farm,
     ];
     this.seed = Math.floor(Math.random() * 10000000);
+    this.onworldupdate = () =>
+    {
+      this.render();
+    };
   }
 
   render()

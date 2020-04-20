@@ -4,20 +4,16 @@ const TARGET_FRAMERATE = 10;
 
 class UIRenderer
 {
-  constructor(context, game, worldScale, uiScale)
+  constructor(context, game, uiScale)
   {
     this.context = context;
     this.game = game;
-    this.worldScale = worldScale;
     this.uiScale = uiScale;
 
     this.selection = {x: 0, y: 0};
     this.context.canvas.addEventListener("mousemove", (e) =>
     {
-      const tileX = Math.floor(e.clientX / (TILE_SIZE * this.worldScale));
-      const tileY = Math.floor(e.clientY / (TILE_SIZE * this.worldScale));
-
-      this.selection = {x: tileX, y: tileY};
+      this.selection = game.world.getTileCoords(e.clientX, e.clientY);
     });
 
     const renderFrameCount = 60 / TARGET_FRAMERATE;
@@ -59,7 +55,7 @@ class UIRenderer
 
   drawReticule(tileX, tileY)
   {
-    const scaledTileSize = TILE_SIZE * this.worldScale;
+    const scaledTileSize = TILE_SIZE * this.game.world.worldScale;
     const x = tileX * scaledTileSize;
     const y = tileY * scaledTileSize;
 
