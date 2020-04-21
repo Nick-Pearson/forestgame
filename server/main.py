@@ -5,6 +5,7 @@ from forestgame.game_registry import GameRegistry;
 from forestgame.request import Request;
 
 from forestgame.handlers.player_handler import PlayerHandler;
+from forestgame.handlers.game_handler import GameHandler;
 from forestgame.handlers.handler_exceptions import HandlerException;
 
 app = Flask(__name__)
@@ -26,6 +27,7 @@ game = game_registry.create_game("6ae9e011-55ce-47f2-86a5-4c713d0f94fe")
 game.add_player("4a7f81c1-6803-4e25-bf97-33a71567afec");
 
 playerHandler = PlayerHandler(game_registry);
+gameHandler = GameHandler(game_registry);
 
 def get_client_id_token(req):
     if CLIENT_ID_COOKIE_KEY in req.cookies:
@@ -89,37 +91,18 @@ def get_player_stats(game_id):
 
 @app.route('/api/game/<game_id>/world')
 def get_world_data(game_id):
-    return {
-        "tileData": [
-            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-            [1, 1, 1, 1, 1, 1, 2, 0, 2, 1, 1, 1, 1, 1, 1],
-            [1, 1, 1, 1, 1, 1, 0, 2, 2, 1, 1, 1, 1, 1, 1],
-            [1, 1, 1, 1, 1, 1, 2, 2, 2, 1, 1, 1, 1, 1, 1],
-            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-        ],
-        "buildings": [
-            {
-            "type": 0,
-            "x": 7,
-            "y": 6
-            },
-            {
-            "type": 1,
-            "x": 6,
-            "y": 7
-            }
-        ]
-    }
+    try:
+        return gameHandler.get_world(build_request({"game_id": game_id}));
+    except HandlerException as e:
+        return handle_exception(e);
+
+@app.route('/api/game/<game_id>/actions/deforest', methods = ["POST"])
+def action_deforest(game_id):
+    try:
+        return gameHandler.action_deforest(build_request({"game_id": game_id}));
+    except HandlerException as e:
+        return handle_exception(e);
+
 
 if __name__ == "__main__":
     print("Starting server");

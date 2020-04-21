@@ -59,7 +59,6 @@ class World
     };
     restRequest(req, (resp) =>
     {
-      console.log(resp);
       this.updateWorldData();
     });
   }
@@ -78,7 +77,7 @@ class World
       return MOUNTAIN_TILE_ID;
     }
     {
-      return this.tileData[x][y];
+      return this.tileData[y][x];
     }
   }
 

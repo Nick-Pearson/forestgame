@@ -11,3 +11,24 @@ class GameHandler():
       raise ResourceNotFoundException("Game not found");
 
     return game;
+
+  def get_world(self, request):
+    game_id = request.path["game_id"];
+    game = self.lookup_game(game_id, request.client_id);
+
+    return {
+      "tileData": game.world.get_tile_data(),
+      "buildings": []
+    };
+
+  def action_deforest(self, request):
+    game_id = request.path["game_id"];
+    coords = request.body;
+    game = self.lookup_game(game_id, request.client_id);
+    
+    game.world.set_tile_at(coords["x"], coords["y"], 2);
+
+    player = game.get_player_for_client_id(request.client_id);
+    player.wood += 10;
+
+    return {};

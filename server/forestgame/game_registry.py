@@ -1,5 +1,7 @@
 import uuid
 
+from forestgame.game.world import World;  
+
 class Player:
   def __init__(self, client_id, player_id):
     self._client_id = client_id;
@@ -12,11 +14,11 @@ class Player:
     self.food = 0;
 
 class Game:
-    id = ""
-
     def __init__(self, id):
         self.id = id;
         self._players = {};
+        self.world = World();
+        self.world.set_size(15, 15);
 
     def add_player(self, client_id):
       player = Player(client_id, str(len(self._players)));

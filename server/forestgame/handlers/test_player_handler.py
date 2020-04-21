@@ -36,7 +36,7 @@ class PlayerNameTest(unittest.TestCase):
 
         getResp = self.handler.get_name(Request(CLIENT_ID, {"game_id": GAME_ID}));
 
-        self.assertEquals("Player name", getResp["name"])
+        self.assertEquals("Player 0", getResp["name"])
     
     def test_put_for_non_existant_game_returns_not_found(self):
         with self.assertRaises(ResourceNotFoundException) as context:
