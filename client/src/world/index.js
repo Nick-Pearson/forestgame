@@ -42,16 +42,15 @@ class World
         const y = building.y;
         this.buildings[y][x] = building;
       });
-
-      if (this.onworldupdate != null)
-      {
-        this.onworldupdate();
-      }
+      this.triggerWorldUpdate();
     });
   }
 
   actionDeforest(x, y)
   {
+    this.tileData[y][x] = 2;
+    this.triggerWorldUpdate();
+
     const req = {
       method: "POST",
       path: "/game/" + this.gameId + "/actions/deforest",
@@ -61,6 +60,14 @@ class World
     {
       this.updateWorldData();
     });
+  }
+
+  triggerWorldUpdate()
+  {
+    if (this.onworldupdate != null)
+    {
+      this.onworldupdate();
+    }
   }
 
   getTileCoords(clientX, clientY)
