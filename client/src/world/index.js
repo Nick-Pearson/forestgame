@@ -46,7 +46,7 @@ class World
     });
   }
 
-  actionDeforest(x, y)
+  actionDeforest(x, y, oncomplete)
   {
     this.tileData[y][x] = 2;
     this.triggerWorldUpdate();
@@ -59,6 +59,7 @@ class World
     restRequest(req, (resp) =>
     {
       this.updateWorldData();
+      oncomplete();
     });
   }
 

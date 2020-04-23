@@ -29,7 +29,8 @@ class WorldRenderer
 
   render()
   {
-    this.context.clearRect(0, 0, this.context.canvas.width, this.context.canvas.height);
+    this.context.fillStyle = "black";
+    this.context.fillRect(0, 0, this.context.canvas.width, this.context.canvas.height);
 
     const maxX = this.world.getSizeX();
     const maxY = this.world.getSizeY();

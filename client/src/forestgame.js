@@ -31,7 +31,10 @@ class ForestGame
 
     if (tileId == FOREST_TILE_ID)
     {
-      this.world.actionDeforest(x, y);
+      this.world.actionDeforest(x, y, () =>
+      {
+        this.playerStats.refresh();
+      });
     }
   }
 }
