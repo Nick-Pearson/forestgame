@@ -53,7 +53,7 @@ export default
     const mainCanvas = this.$refs['main-canvas'];
     const uiCanvas = this.$refs['ui-canvas'];
 
-    const game = new ForestGame(gameId, mainCanvas);
+    const game = new ForestGame(gameId);
 
     const UI_SCALE = 1;
 
@@ -70,11 +70,19 @@ export default
       uiCanvas.height = appContainer.clientHeight;
 
       mainCanvas.style.width = mainCanvas.width * game.world.worldScale;
+
+      game.onCanvasSizeChanged(appContainer.clientWidth, appContainer.clientHeight);
+
+      // immiedate re-render to prevent any momentary screen glitches
       worldRenderer.render();
       uiRenderer.render();
     };
 
     window.addEventListener("resize", setCanvasSize);
+    game.world.onworldloaded = () => 
+    {
+      setCanvasSize();
+    };
     setCanvasSize();
   }
 }

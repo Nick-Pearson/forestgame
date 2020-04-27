@@ -1,24 +1,21 @@
 import {restRequest} from "../io.js";
 import {TILE_SIZE, MOUNTAIN_TILE_ID} from "../tile/index.js";
 
-const TILES = [
-  "base",
-  "forest",
-  "clearing",
-  "mountains",
-];
-
 class World
 {
   constructor(gameId)
   {
     this.gameId = gameId;
     this.onworldupdate = null;
+    this.onworldloaded = null;
     this.tileData = [];
     this.buildings = [];
     this.sizeX = 0;
     this.sizeY = 0;
     this.worldScale = 3.4;
+    this.worldPosition = {x: 0, y: 0};
+    this.cameraPosition = {x: 0, y: -2};
+    this.loaded = false;
 
     this.updateWorldData();
   }
@@ -42,8 +39,33 @@ class World
         const y = building.y;
         this.buildings[y][x] = building;
       });
+
+      // notify listeners
+      if (this.loaded == false)
+      {
+        this.loaded = true;
+        if (this.onworldloaded != null)
+        {
+          this.onworldloaded();
+        }
+      }
       this.triggerWorldUpdate();
     });
+  }
+
+  moveCamera(x, y)
+  {
+    if (x == 0.0 && y == 0.0) return;
+
+    this.cameraPosition.x += x;
+    this.cameraPosition.y += y;
+    this.triggerWorldUpdate();
+  }
+
+  setWorldPosition(x, y)
+  {
+    this.worldPosition.x = x;
+    this.worldPosition.y = y;
   }
 
   actionDeforest(x, y, oncomplete)
@@ -71,13 +93,23 @@ class World
     }
   }
 
-  getTileCoords(clientX, clientY)
+  getTileFromCoords(clientX, clientY)
   {
-    const tileX = Math.floor(clientX / (TILE_SIZE * this.worldScale));
-    const tileY = Math.floor(clientY / (TILE_SIZE * this.worldScale));
+    const scaledX = clientX / this.worldScale;
+    const scaledY = clientY / this.worldScale;
+    const tileX = Math.floor((scaledX - this.getOffsetX()) / TILE_SIZE);
+    const tileY = Math.floor((scaledY - this.getOffsetY()) / TILE_SIZE);
 
     return {x: tileX, y: tileY};
   }
+
+  getCoordsForTile(tileX, tileY)
+  {
+    const clientX = (tileX * TILE_SIZE) + this.getOffsetX();
+    const clientY = (tileY * TILE_SIZE) + this.getOffsetY();
+    return {x: clientX, y: clientY};
+  }
+
   getTileAt(x, y)
   {
     if (x < 0 || y < 0 || x >= this.sizeX || y >= this.sizeY)
@@ -99,6 +131,16 @@ class World
     return this.sizeY;
   }
 
+  getOffsetX()
+  {
+    return Math.round(this.cameraPosition.x + this.worldPosition.x);
+  }
+
+  getOffsetY()
+  {
+    return Math.round(this.cameraPosition.y + this.worldPosition.y);
+  }
+
   getTileData()
   {
     return this.tileData;
@@ -110,4 +152,4 @@ class World
   }
 }
 
-export {World, TILES};
+export {World};

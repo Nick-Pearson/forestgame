@@ -34,6 +34,8 @@ class WorldRenderer
 
     const maxX = this.world.getSizeX();
     const maxY = this.world.getSizeY();
+    const offsetX = this.world.getOffsetX();
+    const offsetY = this.world.getOffsetY();
     const tileData = this.world.getTileData();
     const buildings = this.world.getBuildingData();
 
@@ -45,8 +47,8 @@ class WorldRenderer
       {
         const tileId = tileData[y][x];
         const tiles = this.tileIdToTiles[tileId];
-        const tileX = TILE_SIZE * x;
-        const tileY = (TILE_SIZE * y) - 2;
+        const tileX = (TILE_SIZE * x) + offsetX;
+        const tileY = (TILE_SIZE * y) + offsetY;
 
         this.context.drawImage(tiles[rand.nextInt(tiles.length)], tileX, tileY);
 

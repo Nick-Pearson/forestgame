@@ -41,7 +41,6 @@ def set_client_id_token(resp, token):
 @app.route('/', defaults={'u_path': ''})
 @app.route('/game/<path:u_path>')
 def no_params_page(u_path):
-    print("hello");
     player_id = get_client_id_token(request)
 
     response = send_from_directory(DIST_DIRECTORY, 'index.html')

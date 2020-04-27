@@ -13,7 +13,7 @@ class UIRenderer
     this.selection = {x: 0, y: 0};
     this.context.canvas.addEventListener("mousemove", (e) =>
     {
-      this.selection = game.world.getTileCoords(e.clientX, e.clientY);
+      this.selection = game.world.getTileFromCoords(e.clientX, e.clientY);
     });
 
     const renderFrameCount = 60 / TARGET_FRAMERATE;
@@ -55,16 +55,18 @@ class UIRenderer
 
   drawReticule(tileX, tileY)
   {
+    const coords = this.game.world.getCoordsForTile(tileX, tileY);
+    coords.x *= this.game.world.worldScale;
+    coords.y += 2;
+    coords.y *= this.game.world.worldScale;
     const scaledTileSize = TILE_SIZE * this.game.world.worldScale;
-    const x = tileX * scaledTileSize;
-    const y = tileY * scaledTileSize;
 
     this.context.beginPath();
-    this.context.moveTo(x, y);
-    this.context.lineTo(x + scaledTileSize, y);
-    this.context.lineTo(x + scaledTileSize - 1, y + scaledTileSize - 1);
-    this.context.lineTo(x, y + scaledTileSize - 1);
-    this.context.lineTo(x, y);
+    this.context.moveTo(coords.x, coords.y);
+    this.context.lineTo(coords.x + scaledTileSize, coords.y);
+    this.context.lineTo(coords.x + scaledTileSize - 1, coords.y + scaledTileSize - 1);
+    this.context.lineTo(coords.x, coords.y + scaledTileSize - 1);
+    this.context.lineTo(coords.x, coords.y);
     this.context.strokeStyle = "red";
     this.context.lineJoin = "miter";
     this.context.lineWidth = 2;

@@ -18,7 +18,7 @@ class Game:
         self.id = id;
         self._players = {};
         self.world = World();
-        self.world.set_size(15, 15);
+        self.world.set_size(40, 20);
 
     def add_player(self, client_id):
       player = Player(client_id, str(len(self._players)));
