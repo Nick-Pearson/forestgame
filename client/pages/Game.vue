@@ -79,10 +79,10 @@ export default
     };
 
     window.addEventListener("resize", setCanvasSize);
-    game.world.onworldloaded = () => 
+    game.world.onworldloaded.addListener(() => 
     {
       setCanvasSize();
-    };
+    });
     setCanvasSize();
   }
 }

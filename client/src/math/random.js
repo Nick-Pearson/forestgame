@@ -10,10 +10,10 @@ class Random
     this.seed = seed;
   }
 
-  nextInt(max)
+  nextInt()
   {
     this.seed = evolveSeed(this.seed);
-    return this.seed % max;
+    return this.seed;
   }
 }
 

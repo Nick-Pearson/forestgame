@@ -1,5 +1,7 @@
 import {loadAllTiles, TILE_SIZE} from "../tile/index.js";
-import {Random} from "../math/random.js";
+import {GridRandom} from "../math/gridrandom.js";
+
+const WORLD_PADDING = 4;
 
 class WorldRenderer
 {
@@ -20,11 +22,17 @@ class WorldRenderer
       this.tiles.townhall,
       this.tiles.farm,
     ];
-    this.seed = Math.floor(Math.random() * 10000000);
-    world.onworldupdate = () =>
+    const seed = Math.floor(Math.random() * 10000000);
+    this.rand = new GridRandom(seed, 1, 1);
+
+    world.onworldupdate.addListener(() =>
     {
       this.render();
-    };
+    });
+    world.onworldloaded.addListener(() =>
+    {
+      this.rand = new GridRandom(seed, world.getSizeX() + (WORLD_PADDING * 2), world.getSizeY() + (WORLD_PADDING * 2));
+    });
   }
 
   render()
@@ -32,33 +40,44 @@ class WorldRenderer
     this.context.fillStyle = "black";
     this.context.fillRect(0, 0, this.context.canvas.width, this.context.canvas.height);
 
-    const maxX = this.world.getSizeX();
-    const maxY = this.world.getSizeY();
     const offsetX = this.world.getOffsetX();
     const offsetY = this.world.getOffsetY();
-    const tileData = this.world.getTileData();
-    const buildings = this.world.getBuildingData();
 
-    const rand = new Random(this.seed);
+    const mapTopLeft = this.ensureInBound(this.world.getTileFromCoords(0, 0));
+    const mapBottomRight = this.ensureInBound(this.world.getTileFromCoords(this.context.canvas.width, this.context.canvas.height));
 
-    for (let x = maxX - 1; x >= 0; x--)
+    for (let x = mapBottomRight.x; x >= mapTopLeft.x; x--)
     {
-      for (let y = 0; y < maxY; y++)
+      for (let y = mapTopLeft.y; y <= mapBottomRight.y; y++)
       {
-        const tileId = tileData[y][x];
+        const tileId = this.world.getTileAt(x, y);
         const tiles = this.tileIdToTiles[tileId];
         const tileX = (TILE_SIZE * x) + offsetX;
         const tileY = (TILE_SIZE * y) + offsetY;
 
-        this.context.drawImage(tiles[rand.nextInt(tiles.length)], tileX, tileY);
+        const rand = this.rand.getRand(x + WORLD_PADDING, y + WORLD_PADDING);
 
-        const building = buildings[y][x];
+        this.context.drawImage(tiles[rand % tiles.length], tileX, tileY);
+
+        const building = this.world.getBuildingAt(x, y);
         if (building != null)
         {
           this.context.drawImage(this.buildingIdToSprite[building.type], tileX, tileY);
         }
       }
     }
+  }
+
+  ensureInBound(coords)
+  {
+    const minX = -WORLD_PADDING;
+    const maxX = this.world.getSizeX() + WORLD_PADDING - 1;
+    const minY = -WORLD_PADDING;
+    const maxY = this.world.getSizeY() + WORLD_PADDING - 1;
+    return {
+      x: Math.max(minX, Math.min(coords.x, maxX)),
+      y: Math.max(minY, Math.min(coords.y, maxY)),
+    };
   }
 }
 

@@ -1,4 +1,5 @@
 import {restRequest} from "../io.js";
+import {EventBroadcast} from "../eventbroadcast.js";
 import {TILE_SIZE, MOUNTAIN_TILE_ID} from "../tile/index.js";
 
 class World
@@ -6,8 +7,8 @@ class World
   constructor(gameId)
   {
     this.gameId = gameId;
-    this.onworldupdate = null;
-    this.onworldloaded = null;
+    this.onworldupdate = new EventBroadcast();
+    this.onworldloaded = new EventBroadcast();
     this.tileData = [];
     this.buildings = [];
     this.sizeX = 0;
@@ -44,12 +45,9 @@ class World
       if (this.loaded == false)
       {
         this.loaded = true;
-        if (this.onworldloaded != null)
-        {
-          this.onworldloaded();
-        }
+        this.onworldloaded.broadcast();
       }
-      this.triggerWorldUpdate();
+      this.onworldupdate.broadcast();
     });
   }
 
@@ -59,7 +57,7 @@ class World
 
     this.cameraPosition.x += x;
     this.cameraPosition.y += y;
-    this.triggerWorldUpdate();
+    this.onworldupdate.broadcast();
   }
 
   setWorldPosition(x, y)
@@ -71,7 +69,7 @@ class World
   actionDeforest(x, y, oncomplete)
   {
     this.tileData[y][x] = 2;
-    this.triggerWorldUpdate();
+    this.onworldupdate.broadcast();
 
     const req = {
       method: "POST",
@@ -83,14 +81,6 @@ class World
       this.updateWorldData();
       oncomplete();
     });
-  }
-
-  triggerWorldUpdate()
-  {
-    if (this.onworldupdate != null)
-    {
-      this.onworldupdate();
-    }
   }
 
   getTileFromCoords(clientX, clientY)
@@ -121,6 +111,11 @@ class World
     }
   }
 
+  getBuildingAt(x, y)
+  {
+    return null;
+  }
+
   getSizeX()
   {
     return this.sizeX;
@@ -139,16 +134,6 @@ class World
   getOffsetY()
   {
     return Math.round(this.cameraPosition.y + this.worldPosition.y);
-  }
-
-  getTileData()
-  {
-    return this.tileData;
-  }
-
-  getBuildingData()
-  {
-    return this.buildings;
   }
 }
 
