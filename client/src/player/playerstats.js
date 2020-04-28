@@ -13,13 +13,22 @@ class PlayerStats
     this.food = 0;
   }
 
-  refresh()
+  refreshAll()
+  {
+    this.refreshName();
+    this.refreshStats();
+  }
+
+  refreshName()
   {
     restRequest({method: "GET", path: "/game/" + this.gameId + "/player-name"}, (response) =>
     {
       this.playerName = response.body.name;
     });
+  }
 
+  refreshStats()
+  {
     restRequest({method: "GET", path: "/game/" + this.gameId + "/player-stats"}, (response) =>
     {
       const stats = response.body.stats;

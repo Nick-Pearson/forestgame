@@ -16,7 +16,15 @@ class GridRandom
 
   getRand(x, y)
   {
-    return this.data[x + (y * this.sizeX)];
+    const val = this.data[x + (y * this.sizeX)];
+    if (val === undefined)
+    {
+      return 0;
+    }
+    else
+    {
+      return val;
+    }
   }
 }
 

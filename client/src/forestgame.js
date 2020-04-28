@@ -10,7 +10,7 @@ class ForestGame
 
     this.world = new World(gameId);
     this.playerStats = new PlayerStats(gameId);
-    this.playerStats.refresh();
+    this.playerStats.refreshAll();
 
     this.setupKeyBinds();
 
@@ -89,7 +89,7 @@ class ForestGame
     {
       this.world.actionDeforest(x, y, () =>
       {
-        this.playerStats.refresh();
+        this.playerStats.refreshStats();
       });
     }
   }
