@@ -16,5 +16,5 @@ script:
   - python -m unittest discover -v -s ./server -p test_*.py
   - eslint client/**/*.js
 
-deploy:
+after_success:
   - docker build -t $DOCKER_USERNAME/forestgame .
