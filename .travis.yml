@@ -7,5 +7,5 @@ install:
   - pip install -r ./server/requirements.txt
 
 script:
-  - echo "Hello world"
-  - python -V
+  - python -m unittest discover -v -s ./server -p test_*.py
+  - eslint client/**/*.js
