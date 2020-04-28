@@ -1,13 +1,11 @@
-language: node_js
-node_js:
-  - 12
-before_install:
-  - sudo apt-get -y install python3
+language: python
+python:
+  - "3.8"
 
 install:
   - npm install
-  - pip3 install -r ./server/requirements.txt
+  - pip install -r ./server/requirements.txt
 
 script:
   - echo "Hello world"
-  - python3 -V
+  - python -V
