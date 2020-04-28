@@ -2,6 +2,9 @@ language: python
 python:
   - "3.8"
 
+services:
+  - docker
+
 before_install:
   - npm install -g eslint
 
@@ -12,3 +15,8 @@ install:
 script:
   - python -m unittest discover -v -s ./server -p test_*.py
   - eslint client/**/*.js
+
+deploy:
+  - docker build -t $DOCKER_USERNAME/forestgame .
+#  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+#  - docker push $DOCKER_USERNAME/forestgame:latest
