@@ -33,7 +33,7 @@ class GameWorldTest(unittest.TestCase):
             [1, 1, 1, 1, 1],
             [1, 1, 1, 1, 1],
         ];
-        self.assertEquals(expectedTiles, resp["tileData"]);
+        self.assertEqual(expectedTiles, resp["tileData"]);
 
 
 class DeforestTest(unittest.TestCase):
@@ -55,9 +55,9 @@ class DeforestTest(unittest.TestCase):
 
         resp = self.handler.action_deforest(Request(CLIENT_ID, {"game_id": GAME_ID}, {"x": 0, "y": 0}));
 
-        self.assertEquals(resp, {});
+        self.assertEqual(resp, {});
         player = game.get_player_for_client_id(CLIENT_ID);
-        self.assertEquals(10, player.wood);
+        self.assertEqual(10, player.wood);
         resp = self.handler.get_world(Request(CLIENT_ID, {"game_id": GAME_ID}));
         expectedTiles = [
             [2, 1, 1, 1, 1],
@@ -66,5 +66,5 @@ class DeforestTest(unittest.TestCase):
             [1, 1, 1, 1, 1],
             [1, 1, 1, 1, 1],
         ];
-        self.assertEquals(expectedTiles, resp["tileData"]);
+        self.assertEqual(expectedTiles, resp["tileData"]);
 
