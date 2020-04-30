@@ -13,6 +13,13 @@ Armys can only move through grid tiles where the forest has been cleared
 
 Civilians are invisible and are assumed to spend most of their time in houses, soliders can be seen
 
+## IDEAS
+
+Goals to reach on the map?
+High resource areas / Capture points?
+
+Gaurd tower building - extra defense
+
 ### Resources
 
 Population: Will grow naturally provided there is space in the town (like AoE where villagers require houses)

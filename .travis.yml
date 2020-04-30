@@ -7,7 +7,6 @@ services:
 
 before_install:
   - npm install -g eslint
-  - npm install -g webpack
 
 install:
   - npm install
@@ -19,6 +18,7 @@ script:
 
 after_success:
   - git stash --all
+  - npm install
   - npm run build_client_prod
   - docker build -t $DOCKER_USERNAME/forestgame .
 
