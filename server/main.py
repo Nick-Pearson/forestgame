@@ -8,7 +8,10 @@ from forestgame.handlers.player_handler import PlayerHandler;
 from forestgame.handlers.game_handler import GameHandler;
 from forestgame.handlers.handler_exceptions import HandlerException;
 
-app = Flask(__name__)
+from settings import load_settings;
+
+settings = load_settings();
+app = Flask(settings["name"])
 
 MINUTE = 60
 HOUR = 60 * MINUTE
@@ -103,8 +106,10 @@ def action_deforest(game_id):
         return handle_exception(e);
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":    
+    print("Loaded settings")
+    print(json.dumps(settings, indent=1));
     print("Starting server");
 
-    app.testing = True;
-    app.run(debug=True);
+    app.testing = settings["debug"];
+    app.run(debug=settings["debug"], port=settings["port"]);
