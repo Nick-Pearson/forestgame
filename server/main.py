@@ -11,7 +11,7 @@ from forestgame.handlers.handler_exceptions import HandlerException;
 from settings import load_settings;
 
 settings = load_settings();
-app = Flask(settings["name"])
+app = Flask(__name__)
 
 MINUTE = 60
 HOUR = 60 * MINUTE
@@ -24,10 +24,6 @@ CLIENT_ID_COOKIE_EXPIRATION = 30 * DAY
 
 client_registry = ClientRegistry()
 game_registry = GameRegistry();
-
-# add some testing fake data
-game = game_registry.create_game("6ae9e011-55ce-47f2-86a5-4c713d0f94fe")
-game.add_player("4a7f81c1-6803-4e25-bf97-33a71567afec");
 
 playerHandler = PlayerHandler(game_registry);
 gameHandler = GameHandler(game_registry);
@@ -111,5 +107,10 @@ if __name__ == "__main__":
     print(json.dumps(settings, indent=1));
     print("Starting server");
 
-    app.testing = settings["debug"];
+    if settings["debug"]:
+        # add some testing fake data
+        game = game_registry.create_game("6ae9e011-55ce-47f2-86a5-4c713d0f94fe")
+        game.add_player("4a7f81c1-6803-4e25-bf97-33a71567afec");
+        app.testing = True;
+    
     app.run(host='0.0.0.0', debug=settings["debug"], port=settings["port"]);
