@@ -17,5 +17,6 @@ script:
   - eslint client/**/*.js
 
 after_success:
-  - webpack --config client/webpack.config.js --mode production
+  - npm run build_client_prod
   - docker build -t $DOCKER_USERNAME/forestgame .
+  - echo $?
