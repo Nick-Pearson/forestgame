@@ -21,10 +21,11 @@ after_success:
   - docker build -t $DOCKER_USERNAME/forestgame .
 
 deploy:
-  provider: heroku
-  api_key: "$HEROKU_KEY"
-  on: master
+  provider: script 
+  script: 
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+    - docker push $DOCKER_USERNAME/forestgame:latest
+    - heroku help
+  branch: master
 
 after_deploy:
-  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-  - docker push $DOCKER_USERNAME/forestgame:latest
