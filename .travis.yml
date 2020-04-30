@@ -20,12 +20,14 @@ after_success:
   - npm run build_client_prod
   - docker build -t $DOCKER_USERNAME/forestgame .
 
+before_deploy:
+  - npm run build_client_prod
+
 deploy:
   provider: heroku 
   api_key: "$HEROKU_API_KEY"
   app: theforestgame
   branch: master
-  skip_cleanup: true
 
 after_deploy:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
