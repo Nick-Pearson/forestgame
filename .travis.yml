@@ -19,4 +19,4 @@ script:
 after_success:
   - npm run build_client_prod
   - docker build -t $DOCKER_USERNAME/forestgame .
-  - echo $?
+  - docker exec -it $DOCKER_USERNAME/forestgame ls
