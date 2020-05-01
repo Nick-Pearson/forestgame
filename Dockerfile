@@ -3,7 +3,7 @@ FROM tiangolo/uwsgi-nginx-flask:python3.6-alpine3.7
 ENV STATIC_URL /static
 ENV STATIC_PATH /var/www/app/static
 
-RUN mv /entrypoint.hh /main-entrypoint.sh
+RUN mv /entrypoint.sh /main-entrypoint.sh
 COPY ./custom-start.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
