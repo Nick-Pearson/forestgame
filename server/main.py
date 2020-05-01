@@ -10,6 +10,8 @@ from forestgame.handlers.handler_exceptions import HandlerException;
 
 from settings import load_settings;
 
+print("hello world!");
+
 settings = load_settings();
 app = Flask(__name__)
 
