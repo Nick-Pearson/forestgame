@@ -1,10 +1,10 @@
 import unittest
 
-from handlers.player_handler import PlayerHandler;
-from handlers.handler_exceptions import BadRequestException;
-from handlers.handler_exceptions import ResourceNotFoundException;
-from game_registry import GameRegistry;
-from request import Request;
+from forestgame.handlers.player_handler import PlayerHandler;
+from forestgame.handlers.handler_exceptions import BadRequestException;
+from forestgame.handlers.handler_exceptions import ResourceNotFoundException;
+from forestgame.game_registry import GameRegistry;
+from forestgame.request import Request;
 
 GAME_ID = "d01823a0-8667-41dc-a63f-0af11564fd87";
 CLIENT_ID = "21fd7079-c7d8-48a7-8663-db924724f98e";

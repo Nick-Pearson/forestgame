@@ -1,6 +1,6 @@
 import unittest
 
-from game.world import World;  
+from forestgame.game.world import World;  
 
 class WorldTest(unittest.TestCase):
   def test_world_inits_to_empty_data(self):
