@@ -2,6 +2,7 @@ FROM tiangolo/uwsgi-nginx-flask:python3.6-alpine3.8
 
 ENV STATIC_URL /static
 ENV STATIC_PATH /var/www/app/static
+ENV LISTEN_PORT 8080
 
 COPY ./custom-start.sh /custom-start.sh
 RUN chmod +x /custom-start.sh
