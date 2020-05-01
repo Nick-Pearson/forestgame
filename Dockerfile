@@ -10,6 +10,6 @@ RUN chmod +x /entrypoint.sh
 COPY ./server/requirements.txt /
 RUN pip install --no-cache-dir -r /requirements.txt
 
+COPY server /app
 COPY uwsgi.ini /app/uwsgi.ini
-COPY server /app/app
 COPY dist /dist
