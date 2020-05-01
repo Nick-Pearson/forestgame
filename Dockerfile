@@ -12,3 +12,4 @@ COPY server /app
 COPY dist /dist
 
 ENTRYPOINT ["/custom-entrypoint.sh"]
+CMD ["/usr/bin/wc","--help"]
