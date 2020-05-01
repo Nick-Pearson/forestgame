@@ -13,6 +13,9 @@ from settings import load_settings;
 print("hello world!");
 
 settings = load_settings();
+print("Loaded settings");
+print(json.dumps(settings, indent=1));
+
 app = Flask(__name__)
 
 MINUTE = 60
@@ -105,8 +108,6 @@ def action_deforest(game_id):
 
 
 if __name__ == "__main__":    
-    print("Loaded settings")
-    print(json.dumps(settings, indent=1));
     print("Starting server");
 
     if settings["debug"]:
