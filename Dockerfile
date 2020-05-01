@@ -5,7 +5,7 @@ ENV STATIC_PATH /var/www/app/static
 ENV LISTEN_PORT 8080
 
 COPY ./server/requirements.txt /
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r /requirements.txt
 
 COPY server /app
 COPY dist /dist
