@@ -1,12 +1,12 @@
 from flask import *
 
-from forestgame.client_registry import ClientRegistry;
-from forestgame.game_registry import GameRegistry;
-from forestgame.request import Request;
+from client_registry import ClientRegistry;
+from game_registry import GameRegistry;
+from request import Request;
 
-from forestgame.handlers.player_handler import PlayerHandler;
-from forestgame.handlers.game_handler import GameHandler;
-from forestgame.handlers.handler_exceptions import HandlerException;
+from handlers.player_handler import PlayerHandler;
+from handlers.game_handler import GameHandler;
+from handlers.handler_exceptions import HandlerException;
 
 from settings import load_settings;
 

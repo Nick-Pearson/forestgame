@@ -1,5 +1,5 @@
-from forestgame.handlers.handler_exceptions import BadRequestException;
-from forestgame.handlers.handler_exceptions import ResourceNotFoundException;
+from handlers.handler_exceptions import BadRequestException;
+from handlers.handler_exceptions import ResourceNotFoundException;
 
 class GameHandler():
   def __init__(self, game_registry):

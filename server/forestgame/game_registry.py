@@ -1,6 +1,6 @@
 import uuid
 
-from forestgame.game.world import World;  
+from game.world import World;  
 
 class Player:
   def __init__(self, client_id, player_id):
