@@ -2,8 +2,8 @@ FROM tiangolo/uwsgi-nginx-flask:python3.6-alpine3.7
 
 ENV STATIC_URL /static
 ENV STATIC_PATH /var/www/app/static
-ENV LISTEN_PORT 8080
 
+RUN mv /entrypoint.hh /main-entrypoint.sh
 COPY ./custom-start.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
