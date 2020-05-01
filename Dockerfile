@@ -4,7 +4,7 @@ ENV STATIC_URL /static
 ENV STATIC_PATH /var/www/app/static
 
 RUN mv /entrypoint.sh /main-entrypoint.sh
-COPY ./custom-start.sh /entrypoint.sh
+COPY ./custom-entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 COPY ./server/requirements.txt /
