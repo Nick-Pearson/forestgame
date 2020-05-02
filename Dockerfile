@@ -15,6 +15,6 @@ RUN sed -i '/chown/d' /etc/uwsgi/uwsgi.ini
 COPY ./server/requirements.txt /
 RUN pip install --no-cache-dir -r /requirements.txt
 
-# COPY server /app/app
-# COPY uwsgi.ini /app/uwsgi.ini
+COPY server /app
+COPY uwsgi.ini /app/uwsgi.ini
 COPY dist /dist
