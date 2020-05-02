@@ -9,6 +9,9 @@ ENV STATIC_PATH /var/www/app/static
 # Heroku hack fix - listen from $PORT rather than $LISTEN_PORT
 RUN sed -i 's/LISTEN_PORT:/PORT:/g' /entrypoint.sh
 
+# Heroku hack fix - remove socket chown
+RUN sed -i '/chown/d' /etc/uwsgi/uwsgi.ini
+
 COPY ./server/requirements.txt /
 RUN pip install --no-cache-dir -r /requirements.txt
 
