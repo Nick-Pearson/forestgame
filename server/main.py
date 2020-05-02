@@ -10,8 +10,6 @@ from forestgame.handlers.handler_exceptions import HandlerException;
 
 from settings import load_settings;
 
-print("hello world!");
-
 settings = load_settings();
 print("Loaded settings");
 print(json.dumps(settings, indent=1));
@@ -59,10 +57,6 @@ def static_script():
 def static_assets(u_path):
     return send_file(DIST_DIRECTORY + '/assets/' + u_path)
 
-@app.route('/api/game', methods = ["POST"])
-def create_game():
-    return { "game_id":"6ae9e011-55ce-47f2-86a5-4c713d0f94fe" }
-
 def build_request(path):
     client_id = get_client_id_token(request);
     return Request(client_id, path, request.get_json());
@@ -92,6 +86,13 @@ def get_player_stats(game_id):
     except HandlerException as e:
         return handle_exception(e);
 
+@app.route('/api/game', methods = ["POST"])
+def create_game():
+    try:
+        return gameHandler.create_game(build_request({}));
+    except HandlerException as e:
+        return handle_exception(e);
+
 @app.route('/api/game/<game_id>/world')
 def get_world_data(game_id):
     try:
@@ -112,8 +113,8 @@ if __name__ == "__main__":
 
     if settings["debug"]:
         # add some testing fake data
-        game = game_registry.create_game("6ae9e011-55ce-47f2-86a5-4c713d0f94fe")
-        game.add_player("4a7f81c1-6803-4e25-bf97-33a71567afec");
+        print("Adding fake data")
+        game = game_registry.create_game("4a7f81c1-6803-4e25-bf97-33a71567afec", "6ae9e011-55ce-47f2-86a5-4c713d0f94fe")
         app.testing = True;
     
     app.run(host='0.0.0.0', debug=settings["debug"], port=settings["port"]);

@@ -14,11 +14,14 @@ class Player:
     self.food = 0;
 
 class Game:
-    def __init__(self, id):
+    def __init__(self, id, host):
         self.id = id;
+        self.host = host;
         self._players = {};
         self.world = World();
         self.world.set_size(40, 20);
+
+        self.add_player(host);
 
     def add_player(self, client_id):
       player = Player(client_id, str(len(self._players)));
@@ -35,10 +38,10 @@ class GameRegistry:
     def get_game_for_id(self, id):
       return self._games.get(id, None);
 
-    def create_game(self, id=None):
+    def create_game(self, host, id=None):
       if id == None:
         id = str(uuid.uuid4())
       
-      game = Game(id);
+      game = Game(id, host);
       self._games[id] = game;
       return game;

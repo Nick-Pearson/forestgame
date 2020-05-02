@@ -20,8 +20,7 @@ class GameWorldTest(unittest.TestCase):
     #missing player from game
 
     def test_get_world_with_initialised_data(self):
-        game = self.game_registry.create_game(GAME_ID)
-        game.add_player(CLIENT_ID);
+        game = self.game_registry.create_game(CLIENT_ID, GAME_ID)
         game.world.set_size(5, 5);
 
         resp = self.handler.get_world(Request(CLIENT_ID, {"game_id": GAME_ID}));
@@ -49,8 +48,7 @@ class DeforestTest(unittest.TestCase):
     #missing data
 
     def test_deforest_removes_forest_for_that_tile_and_increments_player_wood(self):
-        game = self.game_registry.create_game(GAME_ID)
-        game.add_player(CLIENT_ID);
+        game = self.game_registry.create_game(CLIENT_ID, GAME_ID)
         game.world.set_size(5, 5);
 
         resp = self.handler.action_deforest(Request(CLIENT_ID, {"game_id": GAME_ID}, {"x": 0, "y": 0}));
@@ -68,3 +66,22 @@ class DeforestTest(unittest.TestCase):
         ];
         self.assertEqual(expectedTiles, resp["tileData"]);
 
+class CreateGameTest(unittest.TestCase):
+    def __init__(self, methodName):
+        super(CreateGameTest, self).__init__(methodName)
+
+        self.game_registry = GameRegistry();
+        self.handler = GameHandler(self.game_registry);
+
+        
+    def test_create_game_adds_game_to_retristy_with_that_id(self):
+        game = self.game_registry.create_game(CLIENT_ID, GAME_ID)
+        game.world.set_size(5, 5);
+
+        resp = self.handler.create_game(Request(CLIENT_ID, {}));
+
+        game = self.game_registry.get_game_for_id(resp["game_id"]);
+        self.assertNotEqual(None, game);
+        player = game.get_player_for_client_id(CLIENT_ID);
+        self.assertNotEqual(None, player);
+        self.assertEqual(CLIENT_ID, game.host);

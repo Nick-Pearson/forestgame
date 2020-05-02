@@ -12,6 +12,10 @@ class GameHandler():
 
     return game;
 
+  def create_game(self, request):
+    game = self.game_regsitry.create_game(request.client_id);
+    return {"game_id": game.id};
+
   def get_world(self, request):
     game_id = request.path["game_id"];
     game = self.lookup_game(game_id, request.client_id);
