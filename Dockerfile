@@ -13,3 +13,5 @@ RUN pip install --no-cache-dir -r /requirements.txt
 # COPY server /app/app
 # COPY uwsgi.ini /app/uwsgi.ini
 COPY dist /dist
+
+USER nginx
