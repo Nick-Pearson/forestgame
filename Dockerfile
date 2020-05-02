@@ -2,6 +2,8 @@ FROM tiangolo/uwsgi-nginx-flask:python3.7
 
 ENV STATIC_URL /static
 ENV STATIC_PATH /var/www/app/static
+ENV LISTEN_PORT 8080
+ENV PORT 8081
 
 # Heroku hack fix - listen from $PORT rather than $LISTEN_PORT
 RUN sed -i 's/LISTEN_PORT:/PORT:/g' /entrypoint.sh
