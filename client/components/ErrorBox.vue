@@ -1,5 +1,6 @@
 <template>
   <div class="error-box">
+    <strong>Error:</strong>
     <slot></slot>
   </div>
 </template>

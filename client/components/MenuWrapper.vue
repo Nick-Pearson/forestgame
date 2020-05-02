@@ -78,7 +78,6 @@ export default
     const appContainer = bgCanvas.parentElement.parentElement;
 
     const BG_SCALE = 3;
-    const rand = new Random(7210701702);
     const forestTiles = loadForestTiles(() => renderCanvas());
 
     let renderCanvas = () => {
@@ -86,6 +85,8 @@ export default
       bgCanvas.height = appContainer.clientHeight;
       bgCanvas.style.width = bgCanvas.width * BG_SCALE;
 
+      const rand = new Random(7210701702);
+      
       const scaledTileSize = TILE_SIZE * BG_SCALE;
       const maxX = Math.ceil(bgCanvas.width / scaledTileSize);
       const maxY = Math.ceil(bgCanvas.height / scaledTileSize);
