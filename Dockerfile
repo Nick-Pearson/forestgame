@@ -4,7 +4,7 @@ ENV STATIC_URL /static
 ENV STATIC_PATH /var/www/app/static
 
 # Heroku hack fix - listen from $PORT rather than $LISTEN_PORT
-RUN sed -i 's/LISTEN_PORT/PORT/g' /entrypoint.sh
+RUN sed -i 's/LISTEN_PORT:/PORT:/g' /entrypoint.sh
 RUN cat /entrypoint.sh
 
 COPY ./server/requirements.txt /
