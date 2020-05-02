@@ -3,9 +3,8 @@ FROM tiangolo/uwsgi-nginx-flask:python3.7
 ENV STATIC_URL /static
 ENV STATIC_PATH /var/www/app/static
 
-RUN mv /entrypoint.sh /main-entrypoint.sh
-COPY ./custom-entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
+# Heroku hack fix - listen from $PORT rather than $LISTEN_PORT
+RUN sed -i 's/LISTEN_PORT/PORT/g' /entrypoint.sh
 
 COPY ./server/requirements.txt /
 RUN pip install --no-cache-dir -r /requirements.txt
