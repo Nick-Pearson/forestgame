@@ -1,5 +1,6 @@
 FROM tiangolo/uwsgi-nginx-flask:python3.6-alpine3.8
 
+RUN apk add --no-cache bash
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 
 ENV STATIC_URL /static
