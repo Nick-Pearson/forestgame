@@ -1,8 +1,8 @@
 <template>
-  <div>
-    <router-link to="/">Home</router-link>
+  <MenuWrapper>
+    <ReturnHomeButton/>
 
-    <h2>Create New Game</h2>
+    <h1>Create New Game</h1>
 
     <form>
       <p>{{errorMsg}}</p>
@@ -11,13 +11,15 @@
         <span v-else>Creating...</span>
       </button>
     </form>
-  </div>
+  </MenuWrapper>
 </template>
 
 <style>
 </style>
 
 <script>
+import MenuWrapper from '../components/MenuWrapper.vue'
+import ReturnHomeButton from '../components/ReturnHomeButton.vue'
 import {restRequest} from "../src/io.js"
 
 const model = {
@@ -55,9 +57,14 @@ function createGame(e)
 
 export default 
 {
+  name: 'CreateGame',
   data: () => model,
   methods: {
     createGame: createGame
+  },
+  components: {
+    MenuWrapper,
+    ReturnHomeButton
   }
 }
 </script>

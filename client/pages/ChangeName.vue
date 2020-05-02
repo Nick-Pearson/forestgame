@@ -1,11 +1,11 @@
 <template>
-  <div>
+  <MenuWrapper>    
     <h1>Change Name</h1>
     <input type="text" v-model="name" placeholder="Player Name"/>
-    <p v-bind:class="{invalid: !isValid}">{{charactersUsed}} / {{maxCharacters}} characters</p>
-      <p>{{errorMsg}}</p>
+    <p v-bind:class="{invalid: !isValid}" class="char-count">{{charactersUsed}} / {{maxCharacters}} characters</p>
+    <ErrorBox v-if="errorMsg.length != 0">{{errorMsg}}</ErrorBox>
     <button v-on:click="changeName($event)">Submit</button>
-  </div>
+  </MenuWrapper>
 </template>
 
 <style>
@@ -13,9 +13,18 @@
   {
     color: #dd0000;
   }
+
+  .char-count
+  {
+    margin: 5px;
+    font-size: 0.8rem;
+  }
 </style>
 
 <script>
+import MenuWrapper from '../components/MenuWrapper.vue'
+import ReturnHomeButton from '../components/ReturnHomeButton.vue'
+import ErrorBox from '../components/ErrorBox.vue'
 import {restRequest} from "../src/io.js"
 
 const model = {
@@ -62,6 +71,11 @@ export default
   },
   methods: {
     changeName: changeName
+  },
+  components: {
+    MenuWrapper,
+    ReturnHomeButton,
+    ErrorBox
   }
 }
 </script>

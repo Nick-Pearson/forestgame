@@ -41,6 +41,7 @@ def set_client_id_token(resp, token):
     resp.set_cookie(CLIENT_ID_COOKIE_KEY, value=token, max_age=CLIENT_ID_COOKIE_EXPIRATION, httponly=True)
 
 @app.route('/', defaults={'u_path': ''})
+@app.route('/<path:u_path>')
 @app.route('/game/<path:u_path>')
 def no_params_page(u_path):
     player_id = get_client_id_token(request)

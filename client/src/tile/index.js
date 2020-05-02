@@ -33,6 +33,11 @@ function loadAllTiles(onload)
   };
 }
 
+function loadForestTiles(onload)
+{
+  return loadImgArray(tileFilepaths.forest, onload);
+}
+
 function loadImgArray(images, onload)
 {
   const imgs = [];
@@ -58,4 +63,4 @@ const FOREST_TILE_ID = 1;
 const CLEARING_TILE_ID = 2;
 const MOUNTAIN_TILE_ID = 3;
 
-export {tileFilepaths, loadAllTiles, TILE_SIZE, BASE_TILE_ID, FOREST_TILE_ID, CLEARING_TILE_ID, MOUNTAIN_TILE_ID};
+export {tileFilepaths, loadAllTiles, loadForestTiles, TILE_SIZE, BASE_TILE_ID, FOREST_TILE_ID, CLEARING_TILE_ID, MOUNTAIN_TILE_ID};
