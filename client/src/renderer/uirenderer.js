@@ -10,12 +10,6 @@ class UIRenderer
     this.game = game;
     this.uiScale = uiScale;
 
-    this.selection = {x: 0, y: 0};
-    this.context.canvas.addEventListener("mousemove", (e) =>
-    {
-      this.selection = game.world.getTileFromCoords(e.clientX, e.clientY);
-    });
-
     const renderFrameCount = 60 / TARGET_FRAMERATE;
     let frameCount = 0;
     const renderLoop = () =>
@@ -35,7 +29,7 @@ class UIRenderer
   {
     this.context.clearRect(0, 0, this.context.canvas.width, this.context.canvas.height);
 
-    this.drawReticule(this.selection.x, this.selection.y);
+    this.drawReticule(this.game.selection.x, this.game.selection.y);
     this.drawStatsBox(this.game.playerStats);
   }
 

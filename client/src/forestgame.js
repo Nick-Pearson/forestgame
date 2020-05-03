@@ -1,18 +1,20 @@
 import {World} from "./world";
 import {PlayerStats} from "./player/playerstats.js";
-import {FOREST_TILE_ID, TILE_SIZE} from "./tile";
+import {TILE_SIZE} from "./tile";
 
 class ForestGame
 {
-  constructor(gameId)
+  constructor(gameId, div, domModel)
   {
     this.gameId = gameId;
+    this.domModel = domModel;
 
     this.world = new World(gameId);
     this.playerStats = new PlayerStats(gameId);
     this.playerStats.refreshAll();
+    this.selection = {x: 0, y: 0};
 
-    this.setupKeyBinds();
+    this.setupKeyBinds(div);
 
     this.moveDirection = {x: 0, y: 0};
 
@@ -39,10 +41,11 @@ class ForestGame
     );
   }
 
-  setupKeyBinds()
+  setupKeyBinds(div)
   {
-    document.addEventListener("mousedown", (e) =>
+    div.addEventListener("mousedown", (e) =>
     {
+      this.updateSelectedTile(e.clientX, e.clientY);
       const coords = this.world.getTileFromCoords(e.clientX, e.clientY);
       this.onClick(coords.x, coords.y);
     });
@@ -79,19 +82,42 @@ class ForestGame
         this.moveDirection.y = 0;
       }
     });
+    document.addEventListener("mousemove", (e) =>
+    {
+      if (!this.domModel.showMenu)
+      {
+        this.updateSelectedTile(e.clientX, e.clientY);
+      }
+    });
+  }
+
+  updateSelectedTile(x, y)
+  {
+    this.selection = this.world.getTileFromCoords(x, y);
   }
 
   onClick(x, y)
   {
-    const tileId = this.world.getTileAt(x, y);
-
-    if (tileId == FOREST_TILE_ID)
+    if (this.domModel.showMenu)
     {
-      this.world.actionDeforest(x, y, () =>
-      {
-        this.playerStats.refreshStats();
-      });
+      this.domModel.showMenu = false;
+      return;
     }
+
+    const coords = this.world.getCoordsForTile(x + 1, y);
+
+    this.domModel.showMenu = true;
+    this.domModel.menuX = coords.x * this.world.worldScale;
+    this.domModel.menuY = coords.y * this.world.worldScale;
+  }
+
+  actionDeforest()
+  {
+    this.world.actionDeforest(this.selection.x, this.selection.y, () =>
+    {
+      this.playerStats.refreshStats();
+    });
+    this.domModel.showMenu = false;
   }
 
   onCanvasSizeChanged(sizeX, sizeY)

@@ -8,10 +8,10 @@ class Player:
     self.id = player_id;
     self.name = "Player " + player_id;
 
-    self.population = 0;
+    self.population = 30;
     self.wood = 0;
     self.coin = 0;
-    self.food = 0;
+    self.food = 60;
 
 class Game:
     def __init__(self, id, host):

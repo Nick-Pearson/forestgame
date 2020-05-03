@@ -1,5 +1,6 @@
 <template>
   <div>
+    <TileMenu v-if="showMenu" v-bind:x="menuX" v-bind:y="menuY" v-bind:game="game"/>
     <canvas ref="main-canvas" class="main-canvas"></canvas>
     <canvas ref="ui-canvas" class="ui-canvas"></canvas>
   </div>
@@ -45,15 +46,30 @@ import {WorldRenderer} from "../src/renderer/worldrenderer.js";
 import {UIRenderer} from "../src/renderer/uirenderer.js";
 import {World} from "../src/world/index.js";
 
+import TileMenu from "../components/TileMenu.vue";
+
+const model = {
+  showMenu: false,
+  menuX: 200,
+  menuY: 200,
+  game: null,
+};
+
 export default 
 {
-  mounted () 
+  name: 'Game',
+  components: {
+    TileMenu,
+  },
+  data: () => model,
+  mounted()
   {
     const gameId = this.$route.params.gameId;
     const mainCanvas = this.$refs['main-canvas'];
     const uiCanvas = this.$refs['ui-canvas'];
 
-    const game = new ForestGame(gameId);
+    const game = new ForestGame(gameId, uiCanvas, model);
+    model.game = game;
 
     const UI_SCALE = 1;
 
