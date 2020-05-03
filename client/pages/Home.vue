@@ -13,11 +13,14 @@
         <button class="join-button">Join Game</button>
       </router-link>
     </div>
+    <footer>
+      Version {{ version }} | 2020 | <a href="https://github.com/Nick-Pearson/forestgame" target="_blank">Source Code</a>
+    </footer>
   </MenuWrapper>
 </template>
 
 <style scoped>
-.title 
+.title
 {
   font-family: 'Arbutus Slab', serif;
 }
@@ -55,6 +58,25 @@
   text-indent: -2px;
   box-shadow: inset -6px -6px 0px 0px #005566;
 }
+
+footer
+{
+  color: #555555;
+  font-size: 0.9rem;
+  padding-top: 20px;
+}
+
+footer a
+{
+  text-decoration: none;
+  font-weight: bold;
+  color: #555555;
+}
+
+footer a:hover
+{
+  color: #000000;
+}
 </style>
 
 <script>
@@ -62,6 +84,7 @@ import MenuWrapper from '../components/MenuWrapper.vue'
 
 export default {
   name: 'Home',
+  props: ['version'],
   components: {
     MenuWrapper
   }

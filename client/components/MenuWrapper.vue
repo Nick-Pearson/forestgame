@@ -39,6 +39,7 @@
 .menu-wrapper
 {
   background-color: #cccccc;
+  border: 2px solid #000000;
   margin: auto;
   padding: 20px;
   z-index: 100;

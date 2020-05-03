@@ -1,4 +1,4 @@
-from flask import *
+from flask import *;
 
 from forestgame.client_registry import ClientRegistry;
 from forestgame.game_registry import GameRegistry;
@@ -14,13 +14,13 @@ settings = load_settings();
 print("Loaded settings");
 print(json.dumps(settings, indent=1));
 
-app = Flask(__name__)
+DIST_DIRECTORY = "../dist"
+app = Flask(__name__, template_folder=DIST_DIRECTORY + '/templates')
 
 MINUTE = 60
 HOUR = 60 * MINUTE
 DAY = 24 * HOUR
 
-DIST_DIRECTORY = "../dist"
 
 CLIENT_ID_COOKIE_KEY = "forestgame_client_id_token"
 CLIENT_ID_COOKIE_EXPIRATION = 30 * DAY
@@ -53,10 +53,6 @@ def no_params_page(u_path):
 @app.route('/game.js')
 def static_script():
     return send_from_directory(DIST_DIRECTORY, 'game.js')
-
-@app.route('/assets/<path:u_path>')
-def static_assets(u_path):
-    return send_file(DIST_DIRECTORY + '/assets/' + u_path)
 
 def build_request(path):
     client_id = get_client_id_token(request);
@@ -108,9 +104,12 @@ def action_deforest(game_id):
     except HandlerException as e:
         return handle_exception(e);
 
-
 if __name__ == "__main__":    
-    print("Starting server");
+    print("Starting server");    
+
+    @app.route('/assets/<path:u_path>')
+    def static_assets(u_path):
+        return send_file(DIST_DIRECTORY + '/assets/' + u_path)
 
     if settings["debug"]:
         # add some testing fake data

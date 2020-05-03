@@ -1,6 +1,11 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const webpack = require("webpack");
 const {VueLoaderPlugin} = require("vue-loader");
+
+const gitCount = require("child_process").execSync("git rev-list HEAD --count").toString().trim();
+const gitTag = require("child_process").execSync("git tag --points-at HEAD").toString().trim();
+const versionId = gitTag != "" ? gitTag : "DEV." + gitCount;
 
 module.exports = {
   entry: [path.resolve(__dirname, "src/index.js")],
@@ -48,7 +53,11 @@ module.exports = {
     new HtmlWebpackPlugin({
       title: "Forest Game",
       template: path.resolve(__dirname, "index.html"),
+      filename: "index.html",
     }),
     new VueLoaderPlugin(),
+    new webpack.DefinePlugin({
+      "__VERSION__": JSON.stringify(versionId),
+    }),
   ],
 };
