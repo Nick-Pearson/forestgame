@@ -1,6 +1,6 @@
 <template>
   <div>
-    <TileMenu v-if="showMenu" v-bind:x="menuX" v-bind:y="menuY" v-bind:game="game"/>
+    <NestedMenu v-if="showMenu" v-bind:x="menuX" v-bind:y="menuY" v-bind:items="menuItems" v-on:menu-select="menuSelect"/>
     <canvas ref="main-canvas" class="main-canvas"></canvas>
     <canvas ref="ui-canvas" class="ui-canvas"></canvas>
   </div>
@@ -46,20 +46,57 @@ import {WorldRenderer} from "../src/renderer/worldrenderer.js";
 import {UIRenderer} from "../src/renderer/uirenderer.js";
 import {World} from "../src/world/index.js";
 
-import TileMenu from "../components/TileMenu.vue";
+import NestedMenu from "../components/NestedMenu.vue";
 
 const model = {
   showMenu: false,
   menuX: 200,
   menuY: 200,
-  game: null,
+  menuItems: [
+    {
+      "label": "Clear Trees",
+      "eventId": "deforest",
+    },
+    {
+      "label": "Build",
+      "eventId": "build",
+      "children": [
+        {
+          "label": "Farm",
+          "eventId": "farm",
+        },
+        {
+          "label": "Farm 2.0",
+          "children": [
+            {
+              "label": "Chicken",
+            },
+            {
+              "label": "Carrot",
+            },
+          ]
+        },
+        {
+          "label": "Farm 3",
+        },
+        {
+          "label": "Farm 4",
+        },
+      ],
+    }
+  ]
 };
 
 export default 
 {
   name: 'Game',
   components: {
-    TileMenu,
+    NestedMenu,
+  },
+  methods: {
+    "menuSelect": function(event) {
+      console.log("Got menu event " + event);
+    }
   },
   data: () => model,
   mounted()
