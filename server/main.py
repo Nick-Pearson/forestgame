@@ -46,6 +46,9 @@ def set_client_id_token(resp, token):
 @app.route('/<path:u_path>')
 @app.route('/game/<path:u_path>')
 def no_params_page(u_path):
+    if u_path.startswith('api'):
+        abort(404);
+    
     player_id = get_client_id_token(request)
 
     response = send_from_directory(DIST_DIRECTORY, 'index.html')
@@ -67,6 +70,13 @@ def handle_exception(e):
 def get_buildings():
     try:
         return staticDataHandler.get_buildings();
+    except HandlerException as e:
+        return handle_exception(e);
+
+@app.route('/api/maps')
+def get_all_maps():
+    try:
+        return staticDataHandler.get_maps();
     except HandlerException as e:
         return handle_exception(e);
 
@@ -119,6 +129,7 @@ def action_build(game_id):
         return gameHandler.action_build(build_request({"game_id": game_id}));
     except HandlerException as e:
         return handle_exception(e);
+    
 
 if __name__ == "__main__":    
     print("Starting server");    

@@ -3,7 +3,7 @@
   box-sizing: border-box;
 }
 
-html, body, input
+html, body, input, select
 {
   font-family: 'Open Sans', sans-serif;
 }
@@ -61,3 +61,23 @@ input
   width: 60%;
   text-align: center;
 }
+
+select
+{
+  padding: 6px;
+  border-radius: 6px;
+  border: 1px solid #000000;
+  width: 60%;
+  text-align: center;
+}
+
+label
+{
+  font-size: 0.9rem;
+}
+
+label:after 
+{ 
+  content: "\A"; 
+  white-space: pre; 
+} 

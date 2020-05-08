@@ -51,7 +51,7 @@ function changeName(e)
     }
     else
     {
-      model.errorMsg = "Unknown Error Occured: HTTP " + response.status;
+      model.errorMsg = "Unknown Error Occurred: HTTP " + response.status;
     }
   });
 }
