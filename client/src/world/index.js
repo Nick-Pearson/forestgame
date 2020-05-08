@@ -89,7 +89,7 @@ class World
     this.buildings[y][x] = {
       x: x,
       y: y,
-      type: buildingId,
+      id: buildingId,
     };
     this.onworldupdate.broadcast();
 
@@ -135,7 +135,13 @@ class World
 
   getBuildingAt(x, y)
   {
-    return null;
+    if (x < 0 || y < 0 || x >= this.sizeX || y >= this.sizeY)
+    {
+      return null;
+    }
+    {
+      return this.buildings[y][x];
+    }
   }
 
   getSizeX()

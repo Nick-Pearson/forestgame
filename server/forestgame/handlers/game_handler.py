@@ -23,7 +23,7 @@ class GameHandler():
 
     return {
       "tileData": game.world.get_tile_data(),
-      "buildings": []
+      "buildings": game.world.get_building_data(),
     };
 
   def action_deforest(self, request):

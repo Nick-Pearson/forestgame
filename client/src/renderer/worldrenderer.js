@@ -62,7 +62,7 @@ class WorldRenderer
         const building = this.world.getBuildingAt(x, y);
         if (building != null)
         {
-          this.context.drawImage(this.buildingIdToSprite[building.type], tileX, tileY);
+          this.context.drawImage(this.buildingIdToSprite[building.id], tileX, tileY);
         }
       }
     }
