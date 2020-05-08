@@ -1,5 +1,6 @@
 from forestgame.handlers.handler_exceptions import BadRequestException;
 from forestgame.handlers.handler_exceptions import ResourceNotFoundException;
+from forestgame.data.building_data import get_building_for_id;
 
 class GameHandler():
   def __init__(self, game_registry):
@@ -35,4 +36,19 @@ class GameHandler():
     player = game.get_player_for_client_id(request.client_id);
     player.wood += 10;
 
+    return {};
+
+  def action_build(self, request):
+    game_id = request.path["game_id"];
+    body = request.body;
+    x = body["x"];
+    y = body["y"];
+    buildingId = body["buildingId"];
+    building = get_building_for_id(buildingId);
+    game = self.lookup_game(game_id, request.client_id);
+
+    player = game.get_player_for_client_id(request.client_id);
+    player.spend(building["cost"]);
+    game.world.set_building_at(x, y, buildingId);
+    game.world.set_tile_at(x, y, 0);
     return {};

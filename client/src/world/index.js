@@ -83,6 +83,28 @@ class World
     });
   }
 
+  actionBuild(buildingId, x, y, oncomplete)
+  {
+    this.tileData[y][x] = 0;
+    this.buildings[y][x] = {
+      x: x,
+      y: y,
+      type: buildingId,
+    };
+    this.onworldupdate.broadcast();
+
+    const req = {
+      method: "POST",
+      path: "/game/" + this.gameId + "/actions/build",
+      body: {x: x, y: y, buildingId: buildingId},
+    };
+    restRequest(req, (resp) =>
+    {
+      this.updateWorldData();
+      oncomplete();
+    });
+  }
+
   getTileFromCoords(clientX, clientY)
   {
     const scaledX = clientX / this.worldScale;

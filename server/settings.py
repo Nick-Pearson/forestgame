@@ -16,7 +16,6 @@ def load_settings():
     "name": "forestgame",
     "port": 5000,
     "debug": False,
-    "version": "Local DEV"
   };
   populate_from_env(settings);
   populate_from_args(settings);

@@ -52,39 +52,7 @@ const model = {
   showMenu: false,
   menuX: 200,
   menuY: 200,
-  menuItems: [
-    {
-      "label": "Clear Trees",
-      "eventId": "deforest",
-    },
-    {
-      "label": "Build",
-      "eventId": "build",
-      "children": [
-        {
-          "label": "Farm",
-          "eventId": "farm",
-        },
-        {
-          "label": "Farm 2.0",
-          "children": [
-            {
-              "label": "Chicken",
-            },
-            {
-              "label": "Carrot",
-            },
-          ]
-        },
-        {
-          "label": "Farm 3",
-        },
-        {
-          "label": "Farm 4",
-        },
-      ],
-    }
-  ]
+  menuItems: []
 };
 
 export default 
@@ -95,7 +63,7 @@ export default
   },
   methods: {
     "menuSelect": function(event) {
-      console.log("Got menu event " + event);
+      model.game.onMenuEvent(event);
     }
   },
   data: () => model,

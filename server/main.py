@@ -6,6 +6,7 @@ from forestgame.request import Request;
 
 from forestgame.handlers.player_handler import PlayerHandler;
 from forestgame.handlers.game_handler import GameHandler;
+from forestgame.handlers.static_data_handler import StaticDataHandler;
 from forestgame.handlers.handler_exceptions import HandlerException;
 
 from settings import load_settings;
@@ -30,6 +31,7 @@ game_registry = GameRegistry();
 
 playerHandler = PlayerHandler(game_registry);
 gameHandler = GameHandler(game_registry);
+staticDataHandler = StaticDataHandler();
 
 def get_client_id_token(req):
     if CLIENT_ID_COOKIE_KEY in req.cookies:
@@ -60,6 +62,13 @@ def build_request(path):
 
 def handle_exception(e):
     return {"message": e.message}, e.status
+
+@app.route('/api/buildings')
+def get_buildings():
+    try:
+        return staticDataHandler.get_buildings();
+    except HandlerException as e:
+        return handle_exception(e);
 
 @app.route('/api/game/<game_id>/player-name', methods = ["PUT"])
 def change_name(game_id):
@@ -101,6 +110,13 @@ def get_world_data(game_id):
 def action_deforest(game_id):
     try:
         return gameHandler.action_deforest(build_request({"game_id": game_id}));
+    except HandlerException as e:
+        return handle_exception(e);
+
+@app.route('/api/game/<game_id>/actions/build', methods = ["POST"])
+def action_build(game_id):
+    try:
+        return gameHandler.action_build(build_request({"game_id": game_id}));
     except HandlerException as e:
         return handle_exception(e);
 

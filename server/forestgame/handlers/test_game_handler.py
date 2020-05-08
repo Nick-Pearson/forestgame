@@ -66,6 +66,43 @@ class DeforestTest(unittest.TestCase):
         ];
         self.assertEqual(expectedTiles, resp["tileData"]);
 
+class BuildTest(unittest.TestCase):
+    def __init__(self, methodName):
+        super(BuildTest, self).__init__(methodName)
+
+        self.game_registry = GameRegistry();
+        self.handler = GameHandler(self.game_registry);
+
+    #missing game
+    #missing player from game
+    #invalid building id
+    #not a clearing
+    #already building there
+    #not enough money
+
+    def test_build_removes_clearing_for_that_tile_and_sets_building_and_decrements_player_resource(self):
+        game = self.game_registry.create_game(CLIENT_ID, GAME_ID)
+        game.world.set_size(5, 5);
+        game.world.set_tile_at(0, 0, 2);
+        player = game.get_player_for_client_id(CLIENT_ID);
+        player.wood = 40;
+
+        resp = self.handler.action_build(Request(CLIENT_ID, {"game_id": GAME_ID}, {"x": 0, "y": 0, "buildingId": 1}));
+
+        self.assertEqual(resp, {});
+        player = game.get_player_for_client_id(CLIENT_ID);
+        self.assertEqual(20, player.wood);
+        resp = self.handler.get_world(Request(CLIENT_ID, {"game_id": GAME_ID}));
+        expectedTiles = [
+            [0, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1],
+        ];
+        self.assertEqual(expectedTiles, resp["tileData"]);
+
+
 class CreateGameTest(unittest.TestCase):
     def __init__(self, methodName):
         super(CreateGameTest, self).__init__(methodName)

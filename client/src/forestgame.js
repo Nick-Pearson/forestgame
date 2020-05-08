@@ -1,6 +1,7 @@
 import {World} from "./world";
 import {PlayerStats} from "./player/playerstats.js";
 import {TILE_SIZE} from "./tile";
+import {restRequest} from "./io.js";
 
 class ForestGame
 {
@@ -13,8 +14,10 @@ class ForestGame
     this.playerStats = new PlayerStats(gameId);
     this.playerStats.refreshAll();
     this.selection = {x: 0, y: 0};
+    this.buildingData = [];
 
     this.setupKeyBinds(div);
+    this.loadStaticData();
 
     this.moveDirection = {x: 0, y: 0};
 
@@ -106,14 +109,65 @@ class ForestGame
 
     const coords = this.world.getCoordsForTile(x + 1, y);
 
+    this.generateTileMenu();
     this.domModel.showMenu = true;
     this.domModel.menuX = coords.x * this.world.worldScale;
     this.domModel.menuY = coords.y * this.world.worldScale;
   }
 
+  generateTileMenu()
+  {
+    const buildingMenu = [];
+
+    this.buildingData.forEach((building) =>
+    {
+      if (!building.buildable) return;
+      const menuItem = {
+        "label": building["name"],
+        "eventId": building["id"],
+      };
+      buildingMenu.push(menuItem);
+    });
+
+    this.domModel.menuItems = [
+      {
+        "label": "Clear Trees",
+        "eventId": "deforest",
+      },
+      {
+        "label": "Build",
+        "eventId": "build",
+        "children": buildingMenu,
+      },
+    ];
+  }
+
+  onMenuEvent(eventId)
+  {
+    console.log("Got menu event " + eventId);
+    if (eventId[0] === "deforest")
+    {
+      this.actionDeforest();
+    }
+    else if (eventId[0] === "build" && eventId.length > 1)
+    {
+      console.log("building " + eventId[1]);
+      this.actionBuild(eventId[1]);
+    }
+  }
+
   actionDeforest()
   {
     this.world.actionDeforest(this.selection.x, this.selection.y, () =>
+    {
+      this.playerStats.refreshStats();
+    });
+    this.domModel.showMenu = false;
+  }
+
+  actionBuild(buildingId)
+  {
+    this.world.actionBuild(buildingId, this.selection.x, this.selection.y, () =>
     {
       this.playerStats.refreshStats();
     });
@@ -135,6 +189,14 @@ class ForestGame
     const halfCanvasWidth = Math.round(canvasSize / (2 * this.world.worldScale));
     const halfWorldWidth = TILE_SIZE * worldSize / 2;
     return halfCanvasWidth - halfWorldWidth;
+  }
+
+  loadStaticData()
+  {
+    restRequest({method: "GET", path: "/buildings"}, (resp) =>
+    {
+      this.buildingData = resp.body["buildings"];
+    });
   }
 }
 

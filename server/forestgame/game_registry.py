@@ -13,6 +13,17 @@ class Player:
     self.coin = 0;
     self.food = 60;
 
+  def spend(self, amount):
+    if amount == None:
+      return;
+    
+    if "wood" in amount:
+      self.wood -= amount["wood"];
+    if "coin" in amount:
+      self.coin -= amount["coin"];
+    if "food" in amount:
+      self.food -= amount["food"];
+
 class Game:
     def __init__(self, id, host):
         self.id = id;
