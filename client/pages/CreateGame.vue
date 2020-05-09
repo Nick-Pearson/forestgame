@@ -10,18 +10,23 @@
 
         <div class="select-wrapper">
           <label for="maps">Map:</label>
-          <select id="maps">
-            <option v-for="map in maps" :key="map.id" :value="map.id">{{map.name}}</option>
+          <select id="maps" v-model="selectedMapVal">
+            <option v-for="map in maps" :key="map.id" :value="map.id">{{map.name}} (2-{{map.maxPlayers}} Players)</option>
           </select>
         </div>
-
-        <img :src="mapThumbnailUrl"/>
         
         <div class="select-wrapper">
           <label for="player-count">Max. Players:</label>
-          <select id="player-count">
+          <select id="player-count" v-model="selectedMaxPlayers">
             <option v-for="i in (selectedMap.maxPlayers - 1)" :key="i" :value="i + 1">{{i + 1}}</option>
           </select>
+        </div>
+
+        <div class="thumb-wrapper">
+          <div class="spinner-container">
+            <Spinner v-if="loadingThumb"/>
+          </div>
+          <img class="map-thumbnail" :src="mapThumbnailUrl" v-on:startload="onThumbStartLoad" v-on:load="onThumbLoaded"/>
         </div>
 
         <p>{{errorMsg}}</p>
@@ -35,17 +40,44 @@
 </template>
 
 <style scoped>
+form
+{
+  width: 60%;
+  margin: auto;
+}
+
 .select-wrapper
 {
   text-align: left;
-  width: 60%;
-  margin: 15px auto 15px auto;
+  width: 100%;
+  margin: 15px 0 15px 0;
 }
 
 .select-wrapper select
 {
   width: 100%;
   margin-top: 3px;
+}
+
+.map-thumbnail
+{
+  border: 2px solid #000000;
+  height: 150px;
+  image-rendering: pixelated;
+}
+
+.thumb-wrapper
+{
+  position: relative;
+}
+
+.thumb-wrapper svg
+{
+  position: absolute;
+  left: 50%;
+  margin-left: -25px;
+  top: 50%;
+  margin-top: -25px;
 }
 </style>
 
@@ -59,8 +91,10 @@ const model = {
   creating: false,
   errorMsg: "",
   loading: true,
+  loadingThumb: true,
   maps: [],
-  selectedMap: null
+  selectedMapVal: null,
+  selectedMaxPlayers: "2"
 }
 
 function createGame(e)
@@ -98,7 +132,7 @@ function mounted()
     if (response.status === 200)
     {
       model.maps = response.body.maps;
-      model.selectedMap = model.maps[0];
+      model.selectedMapVal = model.maps[0].id;
     }
     else if (response.body != null && response.body.message !== undefined)
     {
@@ -117,7 +151,13 @@ export default
   name: 'CreateGame',
   data: () => model,
   methods: {
-    createGame: createGame
+    createGame: createGame,
+    onThumbStartLoad: function() {
+      this.loadingThumb = true
+    },
+    onThumbLoaded: function() {
+      this.loadingThumb = false
+    }
   },
   mounted: mounted,
   components: {
@@ -127,7 +167,14 @@ export default
   },
   computed: {
     mapThumbnailUrl: function() {
-      return this.selectedMap != null ? "/api/maps/" + this.selectedMap.id + "/thumbnail" : ""
+      this.onThumbStartLoad();
+      return "/api/maps/" + this.selectedMapVal + "/thumbnail?maxPlayers=" + this.selectedMaxPlayers
+    },
+    selectedMap: function() 
+    {
+      return this .maps.find((map) => {
+        return map.id == this.selectedMapVal;
+      });
     }
   }
 }

@@ -61,7 +61,7 @@ def static_script():
 
 def build_request(path):
     client_id = get_client_id_token(request);
-    return Request(client_id, path, request.get_json());
+    return Request(client_id, path, request.get_json(), request.args);
 
 def handle_exception(e):
     return {"message": e.message}, e.status
@@ -77,6 +77,14 @@ def get_buildings():
 def get_all_maps():
     try:
         return staticDataHandler.get_maps();
+    except HandlerException as e:
+        return handle_exception(e);
+
+
+@app.route('/api/maps/<map_id>/thumbnail')
+def get_maps_thumbnail(map_id):
+    try:
+        return staticDataHandler.get_map_thumbnail(build_request({"map_id": map_id}));
     except HandlerException as e:
         return handle_exception(e);
 
