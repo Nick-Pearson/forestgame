@@ -111,11 +111,11 @@ class CreateGameTest(unittest.TestCase):
         self.handler = GameHandler(self.game_registry);
 
         
-    def test_create_game_adds_game_to_retristy_with_that_id(self):
+    def test_create_game_adds_game_to_registrty_with_that_id(self):
         game = self.game_registry.create_game(CLIENT_ID, GAME_ID)
         game.world.set_size(5, 5);
 
-        resp = self.handler.create_game(Request(CLIENT_ID, {}));
+        resp = self.handler.create_game(Request(CLIENT_ID, {}, {"mapId": "0", "maxPlayers": "2"}));
 
         game = self.game_registry.get_game_for_id(resp["game_id"]);
         self.assertNotEqual(None, game);

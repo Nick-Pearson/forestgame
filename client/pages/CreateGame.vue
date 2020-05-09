@@ -107,7 +107,11 @@ function createGame(e)
   }
 
   model.creating = true;
-  restRequest({method: "POST", path: "/game"}, (response) => {
+  const body = {
+    "mapId": this.selectedMapVal,
+    "maxPlayers": this.selectedMaxPlayers
+  }
+  restRequest({method: "POST", path: "/game", body: body}, (response) => {
     model.creating = false;
 
     if (response.status === 200)

@@ -1,6 +1,7 @@
 from forestgame.handlers.handler_exceptions import BadRequestException;
 from forestgame.handlers.handler_exceptions import ResourceNotFoundException;
 from forestgame.data.building_data import get_building_for_id;
+from forestgame.data.map_data import get_map_for_id;
 
 class GameHandler():
   def __init__(self, game_registry):
@@ -15,6 +16,8 @@ class GameHandler():
 
   def create_game(self, request):
     game = self.game_regsitry.create_game(request.client_id);
+    mapI = get_map_for_id(request.body["mapId"]);
+    game.init_from_map(mapI, int(request.body["maxPlayers"]));
     return {"game_id": game.id};
 
   def get_world(self, request):

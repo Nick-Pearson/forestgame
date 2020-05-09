@@ -30,7 +30,6 @@ class Game:
         self.host = host;
         self._players = {};
         self.world = World();
-        self.world.set_size(40, 20);
 
         self.add_player(host);
 
@@ -41,6 +40,18 @@ class Game:
 
     def get_player_for_client_id(self, client_id):
       return self._players.get(client_id);
+
+    def init_from_map(self, mapI, maxPlayers):
+      self.world.set_size(mapI.sizeX, mapI.sizeY);
+
+      for i in range(0, maxPlayers):
+        playerStart = mapI.playerStarts[i];
+        self.world.set_tile_at(playerStart[0], playerStart[1], 0)
+        self.world.set_building_at(playerStart[0], playerStart[1], 0)
+
+      # Move into game mode class
+      hill = mapI.features["hill"]
+      self.world.set_tile_at(hill[0], hill[1], 0)
 
 class GameRegistry:
     def __init__(self):
