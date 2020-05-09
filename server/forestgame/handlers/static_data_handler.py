@@ -18,6 +18,9 @@ def generate_thumbnail_for_map(mapI, maxPlayers):
     coords = mapI.features[k];
     pixels[coords[0], coords[1]] = (255, 0, 0)
 
+  for (x, y, tid) in mapI.mapData:
+    pixels[x, y] = (0, 255, 0)
+
   return img;
 
 class StaticDataHandler():

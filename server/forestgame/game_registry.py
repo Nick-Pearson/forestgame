@@ -48,7 +48,10 @@ class Game:
         playerStart = mapI.playerStarts[i];
         self.world.set_tile_at(playerStart[0], playerStart[1], 0)
         self.world.set_building_at(playerStart[0], playerStart[1], 0)
-
+      
+      for (x, y, tid) in mapI.mapData:
+        self.world.set_tile_at(x, y, tid)
+      
       # Move into game mode class
       hill = mapI.features["hill"]
       self.world.set_tile_at(hill[0], hill[1], 0)

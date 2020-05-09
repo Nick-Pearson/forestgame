@@ -110,6 +110,8 @@ class CreateGameTest(unittest.TestCase):
         self.game_registry = GameRegistry();
         self.handler = GameHandler(self.game_registry);
 
+    # invalid map id
+    # invalid max players
         
     def test_create_game_adds_game_to_registrty_with_that_id(self):
         game = self.game_registry.create_game(CLIENT_ID, GAME_ID)
