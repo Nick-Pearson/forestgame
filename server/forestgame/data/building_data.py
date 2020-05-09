@@ -14,7 +14,7 @@ BUILDINGS = [
   },
   {
     "name": "Swamill",
-    "id": 2,
+    "id": 3,
     "buildable": True,
     "cost": {
       "wood": 40,
@@ -23,7 +23,7 @@ BUILDINGS = [
   },
   {
     "name": "Windmill",
-    "id": 3,
+    "id": 4,
     "buildable": True,
     "cost": {
       "wood": 20,

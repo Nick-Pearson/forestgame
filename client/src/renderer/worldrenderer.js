@@ -21,6 +21,7 @@ class WorldRenderer
     this.buildingIdToSprite = [
       this.tiles.townhall,
       this.tiles.farm,
+      this.tiles.flag,
     ];
     const seed = Math.floor(Math.random() * 10000000);
     this.rand = new GridRandom(seed, 1, 1);
@@ -43,7 +44,7 @@ class WorldRenderer
     const offsetX = this.world.getOffsetX();
     const offsetY = this.world.getOffsetY();
 
-    const mapTopLeft = this.ensureInBound(this.world.getTileFromCoords(0, 0));
+    const mapTopLeft = this.ensureInBound(this.world.getTileFromCoords(0, -4));
     const mapBottomRight = this.ensureInBound(this.world.getTileFromCoords(this.context.canvas.width, this.context.canvas.height));
 
     for (let x = mapBottomRight.x; x >= mapTopLeft.x; x--)

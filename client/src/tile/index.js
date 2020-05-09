@@ -12,6 +12,7 @@ import Mountains0 from "./sprites/mountain0.png";
 
 import TownHall from "./sprites/townhall.png";
 import Farm from "./sprites/farm.png";
+import Flag from "./sprites/flag.png";
 
 const tileFilepaths =
 {
@@ -30,6 +31,7 @@ function loadAllTiles(onload)
     mountains: loadImgArray(tileFilepaths.mountains, onload),
     townhall: loadImg(TownHall, onload),
     farm: loadImg(Farm, onload),
+    flag: loadImg(Flag, onload),
   };
 }
 

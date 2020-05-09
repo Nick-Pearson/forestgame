@@ -55,6 +55,7 @@ class Game:
       # Move into game mode class
       hill = mapI.features["hill"]
       self.world.set_tile_at(hill[0], hill[1], 0)
+      self.world.set_building_at(hill[0], hill[1], 2)
 
 class GameRegistry:
     def __init__(self):
