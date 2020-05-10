@@ -21,5 +21,6 @@
         "require-jsdoc": "off",
         "linebreak-style": "off",
         "quotes": ["error", "double"]
-    }
+    },
+    "parser": "babel-eslint"
 }
