@@ -11,10 +11,6 @@
         "Atomics": "readonly",
         "SharedArrayBuffer": "readonly"
     },
-    "parserOptions": {
-        "ecmaVersion": 2018,
-        "sourceType": "module"
-    },
     "rules": {
         "brace-style": ["error", "allman"],
         "max-len": "off",
