@@ -31,11 +31,12 @@ class World:
   def get_tile_at(self, x, y):
     return self.__tileData[y][x];
 
-  def set_building_at(self, x, y, buildingId):
+  def set_building_at(self, x, y, buildingId, ownerId):
     self.__buildingData.append({
       "x": x,
       "y": y,
       "id": buildingId,
+      "ownerId": ownerId,
     });
   
   def get_size_x(self):

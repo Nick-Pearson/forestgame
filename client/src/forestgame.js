@@ -1,5 +1,6 @@
 import {World} from "./world";
 import {PlayerStats} from "./player/playerstats.js";
+import {PlayerData} from "./player/playerdata.js";
 import {TILE_SIZE} from "./tile";
 import {restRequest} from "./io.js";
 
@@ -13,6 +14,8 @@ class ForestGame
     this.world = new World(gameId);
     this.playerStats = new PlayerStats(gameId);
     this.playerStats.refreshAll();
+    this.playerData = new PlayerData(gameId);
+    this.playerData.refresh();
     this.selection = {x: 0, y: 0};
     this.buildingData = [];
 

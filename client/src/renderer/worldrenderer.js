@@ -1,14 +1,15 @@
-import {loadAllTiles, TILE_SIZE} from "../tile/index.js";
+import {loadAllTiles, TILE_SIZE, buildingMetadata} from "../tile/index.js";
 import {GridRandom} from "../math/gridrandom.js";
 
 const WORLD_PADDING = 4;
 
 class WorldRenderer
 {
-  constructor(context, world)
+  constructor(context, game)
   {
     this.context = context;
-    this.world = world;
+    this.game = game;
+    this.world = game.world;
 
     this.context.imageSmoothingEnabled = false;
     this.tiles = loadAllTiles(() => this.render());
@@ -28,13 +29,13 @@ class WorldRenderer
     const seed = Math.floor(Math.random() * 10000000);
     this.rand = new GridRandom(seed, 1, 1);
 
-    world.onworldupdate.addListener(() =>
+    game.world.onworldupdate.addListener(() =>
     {
       this.render();
     });
-    world.onworldloaded.addListener(() =>
+    game.world.onworldloaded.addListener(() =>
     {
-      this.rand = new GridRandom(seed, world.getSizeX() + (WORLD_PADDING * 2), world.getSizeY() + (WORLD_PADDING * 2));
+      this.rand = new GridRandom(seed, game.world.getSizeX() + (WORLD_PADDING * 2), game.world.getSizeY() + (WORLD_PADDING * 2));
     });
   }
 
@@ -65,8 +66,26 @@ class WorldRenderer
         const building = this.world.getBuildingAt(x, y);
         if (building != null)
         {
-          this.context.drawImage(this.buildingIdToSprite[building.id], tileX, tileY);
+          this.drawBuilding(tileX, tileY, building);
         }
+      }
+    }
+  }
+
+  drawBuilding(x, y, building)
+  {
+    this.context.drawImage(this.buildingIdToSprite[building.id], x, y);
+    if (building.ownerId !== null)
+    {
+      this.context.fillStyle = this.game.playerData.getColourForPlayer(building.ownerId);
+
+      const metaData = buildingMetadata[building.id];
+      if (metaData.teamColour !== undefined)
+      {
+        metaData.teamColour.forEach((rect) =>
+        {
+          this.context.fillRect(x + rect.x, y + rect.y, rect.width, rect.height);
+        });
       }
     }
   }

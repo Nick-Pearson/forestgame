@@ -112,6 +112,13 @@ def get_player_stats(game_id):
     except HandlerException as e:
         return handle_exception(e);
 
+@app.route('/api/game/<game_id>/players', methods = ["GET"])
+def get_players(game_id):
+    try:
+        return gameHandler.get_players(build_request({"game_id": game_id}));
+    except HandlerException as e:
+        return handle_exception(e);
+
 @app.route('/api/game', methods = ["POST"])
 def create_game():
     try:
@@ -153,6 +160,9 @@ if __name__ == "__main__":
         print("Adding fake data")
         game = game_registry.create_game("4a7f81c1-6803-4e25-bf97-33a71567afec", "6ae9e011-55ce-47f2-86a5-4c713d0f94fe")
         game.init_from_map(get_map_for_id("2"), 4)
+        game.add_player('1', (0, 200, 0));
+        game.add_player('2', (0, 0, 200));
+        game.add_player('3', (200, 200, 0));
         app.testing = True;
     
     app.run(host='0.0.0.0', debug=settings["debug"], port=settings["port"]);

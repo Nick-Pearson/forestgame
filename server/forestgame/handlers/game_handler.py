@@ -3,6 +3,8 @@ from forestgame.handlers.handler_exceptions import ResourceNotFoundException;
 from forestgame.data.building_data import get_building_for_id;
 from forestgame.data.map_data import get_map_for_id;
 
+from forestgame.colour import colourToHex;
+
 class GameHandler():
   def __init__(self, game_registry):
     self.game_regsitry = game_registry;
@@ -29,6 +31,23 @@ class GameHandler():
       "buildings": game.world.get_building_data(),
     };
 
+  def get_players(self, request):
+    game_id = request.path["game_id"];
+    game = self.lookup_game(game_id, request.client_id);
+
+    players = game.get_all_players();
+
+    return {
+      "players": [
+        {
+          "id": p.id,
+          "me": p.client_id == request.client_id,
+          "colour": colourToHex(p.colour)
+        }
+        for p in players
+      ],
+    };
+
   def action_deforest(self, request):
     game_id = request.path["game_id"];
     coords = request.body;
@@ -52,6 +71,6 @@ class GameHandler():
 
     player = game.get_player_for_client_id(request.client_id);
     player.spend(building["cost"]);
-    game.world.set_building_at(x, y, buildingId);
+    game.world.set_building_at(x, y, buildingId, player.id);
     game.world.set_tile_at(x, y, 0);
     return {};

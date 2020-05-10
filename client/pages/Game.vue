@@ -79,7 +79,7 @@ export default
     const UI_SCALE = 1;
 
     const mainCanvasContext = mainCanvas.getContext('2d');
-    const worldRenderer = new WorldRenderer(mainCanvasContext, game.world);
+    const worldRenderer = new WorldRenderer(mainCanvasContext, game);
     const uiRenderer = new UIRenderer(uiCanvas.getContext('2d'), game, UI_SCALE);
 
     const appContainer = mainCanvas.parentElement.parentElement;

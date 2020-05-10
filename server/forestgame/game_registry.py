@@ -3,10 +3,11 @@ import uuid
 from forestgame.game.world import World;  
 
 class Player:
-  def __init__(self, client_id, player_id):
-    self._client_id = client_id;
+  def __init__(self, client_id, player_id, colour):
+    self.client_id = client_id;
     self.id = player_id;
     self.name = "Player " + player_id;
+    self.colour = colour;
 
     self.population = 30;
     self.wood = 0;
@@ -31,15 +32,18 @@ class Game:
         self._players = {};
         self.world = World();
 
-        self.add_player(host);
+        self.add_player(host, (255, 0, 0));
 
-    def add_player(self, client_id):
-      player = Player(client_id, str(len(self._players)));
+    def add_player(self, client_id, colour):
+      player = Player(client_id, str(len(self._players)), colour);
       self._players[client_id] = player;
       return player
 
     def get_player_for_client_id(self, client_id):
       return self._players.get(client_id);
+
+    def get_all_players(self):
+      return list(self._players.values());
 
     def init_from_map(self, mapI, maxPlayers):
       self.world.set_size(mapI.sizeX, mapI.sizeY);
@@ -47,7 +51,7 @@ class Game:
       for i in range(0, maxPlayers):
         playerStart = mapI.playerStarts[i];
         self.world.set_tile_at(playerStart[0], playerStart[1], 0)
-        self.world.set_building_at(playerStart[0], playerStart[1], 0)
+        self.world.set_building_at(playerStart[0], playerStart[1], 0, str(i))
       
       for (x, y, tid) in mapI.mapData:
         self.world.set_tile_at(x, y, tid)
@@ -55,7 +59,7 @@ class Game:
       # Move into game mode class
       hill = mapI.features["hill"]
       self.world.set_tile_at(hill[0], hill[1], 0)
-      self.world.set_building_at(hill[0], hill[1], 2)
+      self.world.set_building_at(hill[0], hill[1], 2, None)
 
 class GameRegistry:
     def __init__(self):

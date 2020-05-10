@@ -23,6 +23,28 @@ const tileFilepaths =
   mountains: [Mountains0],
 };
 
+const buildingMetadata = [
+  {
+    "teamColour": [
+      {"x": 22, "y": 45, "width": 4, "height": 14},
+      {"x": 39, "y": 45, "width": 4, "height": 14},
+      {"x": 22, "y": 22, "width": 4, "height": 13},
+      {"x": 39, "y": 22, "width": 4, "height": 13},
+    ],
+  },
+  {
+    "teamColour": [
+      {"x": 7, "y": 40, "width": 2, "height": 11},
+      {"x": 11, "y": 40, "width": 2, "height": 11},
+      {"x": 15, "y": 40, "width": 2, "height": 11},
+      {"x": 19, "y": 40, "width": 2, "height": 11},
+    ],
+  },
+  {},
+  {},
+  {},
+];
+
 function loadAllTiles(onload)
 {
   return {
@@ -68,4 +90,4 @@ const FOREST_TILE_ID = 1;
 const CLEARING_TILE_ID = 2;
 const MOUNTAIN_TILE_ID = 3;
 
-export {tileFilepaths, loadAllTiles, loadForestTiles, TILE_SIZE, BASE_TILE_ID, FOREST_TILE_ID, CLEARING_TILE_ID, MOUNTAIN_TILE_ID};
+export {tileFilepaths, loadAllTiles, loadForestTiles, buildingMetadata, TILE_SIZE, BASE_TILE_ID, FOREST_TILE_ID, CLEARING_TILE_ID, MOUNTAIN_TILE_ID};

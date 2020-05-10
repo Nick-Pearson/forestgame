@@ -110,8 +110,9 @@ class CreateGameTest(unittest.TestCase):
         self.game_registry = GameRegistry();
         self.handler = GameHandler(self.game_registry);
 
-    # invalid map id
-    # invalid max players
+    #missing game
+    #missing player from game
+    #client is none of the players
         
     def test_create_game_adds_game_to_registrty_with_that_id(self):
         game = self.game_registry.create_game(CLIENT_ID, GAME_ID)
@@ -124,3 +125,38 @@ class CreateGameTest(unittest.TestCase):
         player = game.get_player_for_client_id(CLIENT_ID);
         self.assertNotEqual(None, player);
         self.assertEqual(CLIENT_ID, game.host);
+
+class GetPlayersTest(unittest.TestCase):
+    def __init__(self, methodName):
+        super(GetPlayersTest, self).__init__(methodName)
+
+        self.game_registry = GameRegistry();
+        self.handler = GameHandler(self.game_registry);
+        
+    # game not found
+
+    def test_get_players_returns_players_with_ids_and_colours(self):
+        game = self.game_registry.create_game(CLIENT_ID, GAME_ID)
+        player = game.get_player_for_client_id(CLIENT_ID)
+        player.colour = (255, 0, 0);
+        game.world.set_size(5, 5);
+        game.add_player("6fb8d67c-fee3-437d-9d08-05c27d8a9d16", (0, 255, 0));
+        game.add_player("6fb8d67c-fee3-437d-9d08-05c27d8a9d17", (0, 0, 255));
+        game.add_player("6fb8d67c-fee3-437d-9d08-05c27d8a9d18", (255, 255, 0));
+
+        resp = self.handler.get_players(Request(CLIENT_ID, {"game_id": GAME_ID}));
+
+        players = resp["players"];
+        self.assertEqual(4, len(players));
+        self.assertEqual("0", players[0]["id"]);
+        self.assertEqual("#FF0000", players[0]["colour"]);
+        self.assertEqual(True, players[0]["me"]);
+        self.assertEqual("1", players[1]["id"]);
+        self.assertEqual("#00FF00", players[1]["colour"]);
+        self.assertEqual(False, players[1]["me"]);
+        self.assertEqual("2", players[2]["id"]);
+        self.assertEqual("#0000FF", players[2]["colour"]);
+        self.assertEqual(False, players[2]["me"]);
+        self.assertEqual("3", players[3]["id"]);
+        self.assertEqual("#FFFF00", players[3]["colour"]);
+        self.assertEqual(False, players[3]["me"]);
