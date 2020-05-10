@@ -37,7 +37,7 @@ class ForestGame
 
   update(deltaTime)
   {
-    const CAMERA_MOVE_SPEED = 40.0;
+    const CAMERA_MOVE_SPEED = 180.0 / this.world.worldScale;
     this.world.moveCamera(
         this.moveDirection.x * deltaTime * CAMERA_MOVE_SPEED,
         this.moveDirection.y * deltaTime * CAMERA_MOVE_SPEED,

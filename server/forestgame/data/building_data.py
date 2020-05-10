@@ -13,7 +13,7 @@ BUILDINGS = [
     }
   },
   {
-    "name": "Swamill",
+    "name": "Sawmill",
     "id": 3,
     "buildable": True,
     "cost": {

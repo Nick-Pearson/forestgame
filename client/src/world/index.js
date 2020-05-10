@@ -13,7 +13,7 @@ class World
     this.buildings = [];
     this.sizeX = 0;
     this.sizeY = 0;
-    this.worldScale = 3.4;
+    this.worldScale = 1.0;
     this.worldPosition = {x: 0, y: 0};
     this.cameraPosition = {x: 0, y: -2};
     this.loaded = false;

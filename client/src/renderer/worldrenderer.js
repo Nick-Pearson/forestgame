@@ -22,6 +22,8 @@ class WorldRenderer
       this.tiles.townhall,
       this.tiles.farm,
       this.tiles.flag,
+      this.tiles.sawmill,
+      this.tiles.windmill,
     ];
     const seed = Math.floor(Math.random() * 10000000);
     this.rand = new GridRandom(seed, 1, 1);
@@ -39,7 +41,7 @@ class WorldRenderer
   render()
   {
     this.context.fillStyle = "black";
-    this.context.fillRect(0, 0, this.context.canvas.width, this.context.canvas.height);
+    this.context.fillRect(0, 0, this.context.canvas.width / this.world.worldScale, this.context.canvas.height / this.world.worldScale);
 
     const offsetX = this.world.getOffsetX();
     const offsetY = this.world.getOffsetY();

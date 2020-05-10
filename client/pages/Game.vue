@@ -78,7 +78,8 @@ export default
 
     const UI_SCALE = 1;
 
-    const worldRenderer = new WorldRenderer(mainCanvas.getContext('2d'), game.world);
+    const mainCanvasContext = mainCanvas.getContext('2d');
+    const worldRenderer = new WorldRenderer(mainCanvasContext, game.world);
     const uiRenderer = new UIRenderer(uiCanvas.getContext('2d'), game, UI_SCALE);
 
     const appContainer = mainCanvas.parentElement.parentElement;
@@ -90,7 +91,7 @@ export default
       uiCanvas.width = appContainer.clientWidth;
       uiCanvas.height = appContainer.clientHeight;
 
-      mainCanvas.style.width = mainCanvas.width * game.world.worldScale;
+      mainCanvasContext.scale(game.world.worldScale, game.world.worldScale);
 
       game.onCanvasSizeChanged(appContainer.clientWidth, appContainer.clientHeight);
 
