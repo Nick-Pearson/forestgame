@@ -1,3 +1,5 @@
+import {loadImg, loadImgArray} from "../imagehelpers.js";
+
 import Base0 from "./sprites/base0.png";
 import Base1 from "./sprites/base1.png";
 
@@ -62,24 +64,6 @@ function loadAllTiles(onload)
 function loadForestTiles(onload)
 {
   return loadImgArray(tileFilepaths.forest, onload);
-}
-
-function loadImgArray(images, onload)
-{
-  const imgs = [];
-  images.forEach((image) =>
-  {
-    imgs.push(loadImg(image, onload));
-  });
-  return imgs;
-}
-
-function loadImg(image, onload)
-{
-  const img = new Image();
-  img.onload = onload;
-  img.src = image;
-  return img;
 }
 
 const TILE_SIZE = 64;

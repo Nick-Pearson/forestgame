@@ -83,13 +83,14 @@ class World
     });
   }
 
-  actionBuild(buildingId, x, y, oncomplete)
+  actionBuild(buildingId, x, y, playerId, oncomplete)
   {
     this.tileData[y][x] = 0;
     this.buildings[y][x] = {
       x: x,
       y: y,
       id: buildingId,
+      ownerId: playerId,
     };
     this.onworldupdate.broadcast();
 

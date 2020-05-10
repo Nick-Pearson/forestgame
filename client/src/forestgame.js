@@ -170,7 +170,7 @@ class ForestGame
 
   actionBuild(buildingId)
   {
-    this.world.actionBuild(buildingId, this.selection.x, this.selection.y, () =>
+    this.world.actionBuild(buildingId, this.selection.x, this.selection.y, this.playerData.myPlayerId, () =>
     {
       this.playerStats.refreshStats();
     });

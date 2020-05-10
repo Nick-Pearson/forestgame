@@ -6,6 +6,7 @@ class PlayerData
   {
     this.gameId = gameId;
     this.players = {};
+    this.myPlayerId = undefined;
   }
 
   refresh()
@@ -15,6 +16,10 @@ class PlayerData
       response.body.players.forEach((player) =>
       {
         this.players[player.id] = player;
+        if (player.me == true)
+        {
+          this.myPlayerId = player.id;
+        }
       });
     });
   }

@@ -1,4 +1,5 @@
 import {TILE_SIZE} from "../tile/index.js";
+import {loadAllSprites} from "../ui/index.js";
 
 const TARGET_FRAMERATE = 10;
 
@@ -9,6 +10,7 @@ class UIRenderer
     this.context = context;
     this.game = game;
     this.uiScale = uiScale;
+    this.sprites = loadAllSprites();
 
     const renderFrameCount = 60 / TARGET_FRAMERATE;
     let frameCount = 0;
@@ -74,42 +76,47 @@ class UIRenderer
 
   drawStatsBox(stats)
   {
+    /*
     this.setTextSize(35);
     const textBoxSize = Math.max(140, 20 + this.context.measureText(stats.playerName).width);
 
-    this.context.fillStyle = "#7c5542";
-    this.context.fillRect(0, 0, textBoxSize, 50);
-    this.context.fillRect(0, 50, 120, 110);
+    const namePanelHeight = this.sprites.panelB.height * 1.1;
+    this.context.drawImage(this.sprites.panelB, 0, 0, textBoxSize, namePanelHeight);
 
-    this.drawTextShadowed(stats.playerName, 10, 35, "white");
+    this.drawTextShadowed(stats.playerName, 10, 38, "white");
+    */
 
-    this.context.beginPath();
-    this.context.moveTo(0, 50);
-    this.context.lineTo(textBoxSize, 50);
-    this.context.lineTo(textBoxSize, 0);
-    this.context.strokeStyle = "#44200f";
-    this.context.lineJoin = "round";
-    this.context.lineWidth = 7;
-    this.context.stroke();
+    this.setTextSize(22);
+    const statPanelHeight = this.sprites.panelA.height * 0.9;
+    this.drawStatPanel(0, 0, stats.population, this.sprites.population);
+    this.drawStatPanel(0, statPanelHeight, stats.wood, this.sprites.wood);
+    this.drawStatPanel(0, statPanelHeight * 2, stats.food, this.sprites.food);
+    this.drawStatPanel(0, statPanelHeight * 3, stats.coin, this.sprites.coin);
+  }
 
-    this.setTextSize(18);
-    this.drawTextShadowed("Pop.", 8, 75, "white");
-    this.drawTextShadowedRight(stats.population, 110, 75, "white");
-    this.drawTextShadowed("Wood", 8, 100, "white");
-    this.drawTextShadowedRight(stats.wood, 110, 100, "white");
-    this.drawTextShadowed("Coin", 8, 125, "white");
-    this.drawTextShadowedRight(stats.coin, 110, 125, "white");
-    this.drawTextShadowed("Food", 8, 150, "white");
-    this.drawTextShadowedRight(stats.food, 110, 150, "white");
+  drawStatPanel(x, y, stat, icon)
+  {
+    const statPanelWidth = this.sprites.panelA.width * 0.8;
+    const statPanelHeight = this.sprites.panelA.height * 0.9;
+    this.context.drawImage(this.sprites.panelA, x - 5, y, statPanelWidth, statPanelHeight);
+    this.context.drawImage(icon, x + 5, y + 8, 26, 26);
+    this.drawTextShadowed(this.formatStat(stat), x + 40, y + 28, "white");
+  }
 
-    this.context.beginPath();
-    this.context.moveTo(120, 50);
-    this.context.lineTo(120, 160);
-    this.context.lineTo(0, 160);
-    this.context.strokeStyle = "#44200f";
-    this.context.lineJoin = "round";
-    this.context.lineWidth = 4;
-    this.context.stroke();
+  formatStat(stat)
+  {
+    if (stat < 1000)
+    {
+      return stat;
+    }
+    else if (stat < 10000)
+    {
+      return stat.toLocaleString();
+    }
+    else
+    {
+      return (stat / 1000).toFixed(1) + "k";
+    }
   }
 }
 
