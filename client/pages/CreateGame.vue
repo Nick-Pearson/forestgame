@@ -22,12 +22,7 @@
           </select>
         </div>
 
-        <div class="thumb-wrapper">
-          <div class="spinner-container">
-            <Spinner v-if="loadingThumb"/>
-          </div>
-          <img class="map-thumbnail" :src="mapThumbnailUrl" v-on:startload="onThumbStartLoad" v-on:load="onThumbLoaded"/>
-        </div>
+        <MapThumbnail v-bind:mapId="selectedMapVal" v-bind:maxPlayers="selectedMaxPlayers"/>
 
         <p>{{errorMsg}}</p>
         <button v-on:click="createGame($event)">
@@ -58,40 +53,19 @@ form
   width: 100%;
   margin-top: 3px;
 }
-
-.map-thumbnail
-{
-  border: 2px solid #000000;
-  height: 150px;
-  image-rendering: pixelated;
-}
-
-.thumb-wrapper
-{
-  position: relative;
-}
-
-.thumb-wrapper svg
-{
-  position: absolute;
-  left: 50%;
-  margin-left: -25px;
-  top: 50%;
-  margin-top: -25px;
-}
 </style>
 
 <script>
 import MenuWrapper from '../components/MenuWrapper.vue'
 import ReturnHomeButton from '../components/ReturnHomeButton.vue'
 import Spinner from '../components/Spinner.vue'
+import MapThumbnail from '../components/MapThumbnail.vue'
 import {restRequest} from "../src/io.js"
 
 const model = {
   creating: false,
   errorMsg: "",
   loading: true,
-  loadingThumb: true,
   maps: [],
   selectedMapVal: null,
   selectedMaxPlayers: "2"
@@ -156,18 +130,13 @@ export default
   data: () => model,
   methods: {
     createGame: createGame,
-    onThumbStartLoad: function() {
-      this.loadingThumb = true
-    },
-    onThumbLoaded: function() {
-      this.loadingThumb = false
-    }
   },
   mounted: mounted,
   components: {
     MenuWrapper,
     ReturnHomeButton,
-    Spinner
+    Spinner,
+    MapThumbnail
   },
   computed: {
     mapThumbnailUrl: function() {

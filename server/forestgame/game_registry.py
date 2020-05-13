@@ -1,4 +1,5 @@
 import uuid
+import random
 
 from forestgame.game.world import World;  
 
@@ -25,17 +26,32 @@ class Player:
     if "food" in amount:
       self.food -= amount["food"];
 
+startingColours = [
+  (204, 0, 0), # red
+  (51, 102, 153), # blue
+  (153, 0, 153), #purple
+  (255, 153, 0), #orange
+  (153, 102, 51), #brown
+  (51, 102, 0) # green
+];
+
+inviteCodeChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+def generateInviteCode():
+  return random.choice(inviteCodeChars) + random.choice(inviteCodeChars) + random.choice(inviteCodeChars) + random.choice(inviteCodeChars);
+
 class Game:
     def __init__(self, id, host):
         self.id = id;
         self.host = host;
         self._players = {};
         self.world = World();
+        self.inviteCode = generateInviteCode();
 
-        self.add_player(host, (255, 0, 0));
+        self.add_player(host);
 
-    def add_player(self, client_id, colour):
-      player = Player(client_id, str(len(self._players)), colour);
+    def add_player(self, client_id):
+      playerId = len(self._players);
+      player = Player(client_id, str(playerId), startingColours[playerId % len(startingColours)]);
       self._players[client_id] = player;
       return player
 
@@ -44,9 +60,14 @@ class Game:
 
     def get_all_players(self):
       return list(self._players.values());
+    
+    def num_players(self):
+      return len(self._players);
 
     def init_from_map(self, mapI, maxPlayers):
       self.world.set_size(mapI.sizeX, mapI.sizeY);
+      self.mapId = mapI.id;
+      self.maxPlayers = maxPlayers;
 
       for i in range(0, maxPlayers):
         playerStart = mapI.playerStarts[i];

@@ -43,4 +43,10 @@ class StaticDataHandler():
 
     return send_file(output, mimetype='image/png');
 
+  def get_map(self, request):
+    mapId = request.path["map_id"];
+    m = get_map_for_id(mapId);
+    return {"name": m.name, "id": m.id, "maxPlayers": m.maxPlayers}
+
+    
   

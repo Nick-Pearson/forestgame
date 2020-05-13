@@ -43,7 +43,7 @@ function changeName(e)
   restRequest({method: "PUT", path: "/game/" + gameId + "/player-name", body: {name: this.name}}, (response) => {
     if (response.status === 200)
     {
-      this.$router.push({name: "game", params: {gameId: gameId}});
+      this.$router.push({name: "lobby", params: {gameId: gameId}});
     }
     else if (response.body != null && response.body.message !== undefined)
     {

@@ -5,6 +5,7 @@ from forestgame.handlers.handler_exceptions import BadRequestException;
 from forestgame.handlers.handler_exceptions import ResourceNotFoundException;
 from forestgame.game_registry import GameRegistry;
 from forestgame.request import Request;
+from forestgame.data.map_data import Map;
 
 GAME_ID = "9ced424f-91c2-47b2-a8ea-6a4bb38f2d2b";
 CLIENT_ID = "6fb8d67c-fee3-437d-9d08-05c27d8a9d15";
@@ -113,6 +114,7 @@ class CreateGameTest(unittest.TestCase):
     #missing game
     #missing player from game
     #client is none of the players
+    #missing data in request
         
     def test_create_game_adds_game_to_registrty_with_that_id(self):
         game = self.game_registry.create_game(CLIENT_ID, GAME_ID)
@@ -134,15 +136,16 @@ class GetPlayersTest(unittest.TestCase):
         self.handler = GameHandler(self.game_registry);
         
     # game not found
+    # client not in game
 
     def test_get_players_returns_players_with_ids_and_colours(self):
         game = self.game_registry.create_game(CLIENT_ID, GAME_ID)
         player = game.get_player_for_client_id(CLIENT_ID)
         player.colour = (255, 0, 0);
         game.world.set_size(5, 5);
-        game.add_player("6fb8d67c-fee3-437d-9d08-05c27d8a9d16", (0, 255, 0));
-        game.add_player("6fb8d67c-fee3-437d-9d08-05c27d8a9d17", (0, 0, 255));
-        game.add_player("6fb8d67c-fee3-437d-9d08-05c27d8a9d18", (255, 255, 0));
+        game.add_player("6fb8d67c-fee3-437d-9d08-05c27d8a9d16").colour = (0, 255, 0);
+        game.add_player("6fb8d67c-fee3-437d-9d08-05c27d8a9d17").colour = (0, 0, 255);
+        game.add_player("6fb8d67c-fee3-437d-9d08-05c27d8a9d18").colour = (255, 255, 0);
 
         resp = self.handler.get_players(Request(CLIENT_ID, {"game_id": GAME_ID}));
 
@@ -160,3 +163,27 @@ class GetPlayersTest(unittest.TestCase):
         self.assertEqual("3", players[3]["id"]);
         self.assertEqual("#FFFF00", players[3]["colour"]);
         self.assertEqual(False, players[3]["me"]);
+
+class GameDataTest(unittest.TestCase):
+    def __init__(self, methodName):
+        super(GameDataTest, self).__init__(methodName)
+
+        self.game_registry = GameRegistry();
+        self.handler = GameHandler(self.game_registry);
+
+    
+    # game not found
+    # client not in game
+
+    def test_get_game_data_returns_info(self):
+        game = self.game_registry.create_game(CLIENT_ID, GAME_ID);
+        mapI = Map("0", "My Map", 10, 10, [(0,0), (1,1), (2,2), (3,3)], {"hill": (0,0)}, []);
+        game.init_from_map(mapI, 4);
+
+        resp = self.handler.get_game_data(Request(CLIENT_ID, {"game_id": GAME_ID}));
+
+        self.assertEqual(GAME_ID, resp["gameId"]);
+        self.assertEqual(4, resp["maxPlayers"]);
+        self.assertEqual(1, resp["numPlayers"]);
+        self.assertEqual("0", resp["mapId"]);
+        self.assertEqual("King of the Hill", resp["gameModeName"]);

@@ -42,11 +42,27 @@ class GameHandler():
         {
           "id": p.id,
           "me": p.client_id == request.client_id,
-          "colour": colourToHex(p.colour)
+          "colour": colourToHex(p.colour),
+          "name": p.name,
         }
         for p in players
       ],
     };
+
+  def get_game_data(self, request):
+    game_id = request.path["game_id"];
+    game = self.lookup_game(game_id, request.client_id);
+
+    mapI = get_map_for_id(game.mapId);
+    return {
+      "gameId": game.id,
+      "inviteCode": game.inviteCode,
+      "state": "GAME",
+      "maxPlayers": game.maxPlayers,
+      "numPlayers": game.num_players(),
+      "mapId": game.mapId,
+      "gameModeName": "King of the Hill",
+    }
 
   def action_deforest(self, request):
     game_id = request.path["game_id"];
