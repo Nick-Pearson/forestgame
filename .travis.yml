@@ -29,7 +29,8 @@ deploy:
   provider: heroku 
   api_key: "$HEROKU_API_KEY"
   app: theforestgame
-  branch: master
+  on:
+    branch: master
   skip_cleanup: true
 
 after_deploy:
