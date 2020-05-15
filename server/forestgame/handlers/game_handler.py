@@ -22,6 +22,14 @@ class GameHandler():
     game.init_from_map(mapI, int(request.body["maxPlayers"]));
     return {"game_id": game.id};
 
+  def join_game(self, request):
+    invite_code = request.path["invite_code"].upper();
+    name = request.body.get("name");
+    game = self.game_regsitry.get_game_for_invite_code(invite_code);
+    player = game.add_player(request.client_id);
+    player.name = name;
+    return {"game_id": game.id};
+
   def get_world(self, request):
     game_id = request.path["game_id"];
     game = self.lookup_game(game_id, request.client_id);

@@ -187,3 +187,27 @@ class GameDataTest(unittest.TestCase):
         self.assertEqual(1, resp["numPlayers"]);
         self.assertEqual("0", resp["mapId"]);
         self.assertEqual("King of the Hill", resp["gameModeName"]);
+
+class JoinGameTest(unittest.TestCase):
+    def __init__(self, methodName):
+        super(JoinGameTest, self).__init__(methodName)
+
+        self.game_registry = GameRegistry();
+        self.handler = GameHandler(self.game_registry);
+
+    # game not found
+    # game exists but not joinable
+    # name not given
+    # invalid player name
+    # player name already taken?
+    # game joinable but user is banned from game
+    # player already in game
+    # already at max number players
+
+    def test_join_game_that_exists_returns_game_id(self):
+        game = self.game_registry.create_game(CLIENT_ID, GAME_ID);
+
+        resp = self.handler.join_game(Request("6fb8d67c-fee3-437d-9d08-05c27d8a9d16", {"invite_code": game.inviteCode}));
+
+        self.assertEqual(game.id, resp["game_id"]);
+        self.assertEqual(2, len(game._players));

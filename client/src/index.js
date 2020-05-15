@@ -6,6 +6,7 @@ import "./app.css";
 
 import Home from "../pages/Home.vue";
 import CreateGame from "../pages/CreateGame.vue";
+import JoinGame from "../pages/JoinGame.vue";
 import ChangeName from "../pages/ChangeName.vue";
 import Lobby from "../pages/Lobby.vue";
 import Game from "../pages/Game.vue";
@@ -20,6 +21,7 @@ function main()
     routes: [
       {path: "/", component: Home, props: {version: __VERSION__}},
       {path: "/create-game", component: CreateGame},
+      {path: "/join-game", component: JoinGame},
       {path: "/game/:gameId/change-name", name: "change-name", component: ChangeName},
       {path: "/game/:gameId/lobby", name: "lobby", component: Lobby},
       {path: "/game/:gameId", name: "game", component: Game},

@@ -24,7 +24,7 @@
 
         <MapThumbnail v-bind:mapId="selectedMapVal" v-bind:maxPlayers="selectedMaxPlayers"/>
 
-        <p>{{errorMsg}}</p>
+        <ErrorBox v-bind:msg="errorMsg"/>
         <button v-on:click="createGame($event)">
           <span v-if="!creating">Create</span>
           <span v-else>Creating...</span>

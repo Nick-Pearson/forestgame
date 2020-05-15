@@ -1,7 +1,6 @@
 <template>
-  <div class="error-box">
-    <strong>Error:</strong>
-    <slot></slot>
+  <div v-if="msg.length != 0" class="error-box">
+    <strong>Error:</strong> {{msg}}
   </div>
 </template>
 
@@ -13,3 +12,9 @@
     border-radius: 4px;
   }
 </style>
+
+<script>
+export default {
+  props: ["msg"],
+}
+</script>

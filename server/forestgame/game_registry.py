@@ -50,6 +50,9 @@ class Game:
         self.add_player(host);
 
     def add_player(self, client_id):
+      if client_id in self._players:
+        return;
+      
       playerId = len(self._players);
       player = Player(client_id, str(playerId), startingColours[playerId % len(startingColours)]);
       self._players[client_id] = player;
@@ -88,6 +91,14 @@ class GameRegistry:
 
     def get_game_for_id(self, id):
       return self._games.get(id, None);
+
+    def get_game_for_invite_code(self, code):
+      for gameId in self._games:
+        game = self._games[gameId];
+        if game.inviteCode == code:
+          return game;
+      return None;
+
 
     def create_game(self, host, id=None):
       if id == None:
