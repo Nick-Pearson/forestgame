@@ -29,5 +29,5 @@ class PostgresConnection:
   def execute(self, sql, params=()):
     cur = self.conn.cursor();
     cur.execute(sql, params);
-    cur.commit();
+    self.conn.commit();
     cur.close();
