@@ -1,6 +1,6 @@
 FROM tiangolo/uwsgi-nginx-flask:python3.6-alpine3.8
 
-RUN apk add --no-cache bash build-base python-dev py-pip jpeg-dev zlib-dev
+RUN apk add --no-cache bash build-base python-dev py-pip jpeg-dev zlib-dev postgresql-libs gcc musl-dev postgresql-dev
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 
 ENV STATIC_URL /assets
