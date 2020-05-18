@@ -1,7 +1,7 @@
 from flask import *;
 
 from forestgame.database.sql_database import SQLDatabase;
-from forestgame.database.sql_connections import InMemoryConnectionFactory, InMemoryConnectionFactory;
+from forestgame.database.sql_connections import InMemoryConnectionFactory, PostgresConnectionFactory;
 
 from forestgame.client_registry import ClientRegistry;
 from forestgame.game_registry import GameRegistry;
@@ -36,7 +36,7 @@ if settings["runMemoryDatabase"]:
     c = factory.get_conn();
     database = SQLDatabase(factory);
 else:
-    database = SQLDatabase(InMemoryConnectionFactory(settings["databaseUrl"]));
+    database = SQLDatabase(PostgresConnectionFactory(settings["databaseUrl"]));
 
 client_registry = ClientRegistry(database);
 game_registry = GameRegistry();
