@@ -28,9 +28,10 @@ class PostgresConnection:
   
   def table_exists(self, table):
     cur = self.conn.cursor();
-    result = cur.execute("SELECT to_regclass('schema_name.table_name');");
+    cur.execute("SELECT to_regclass('public." + table + "')")
+    result = cur.fetchall()
     cur.close();
-    return result != None;
+    return len(result) != 0;
 
   def execute(self, sql, params=()):
     cur = self.conn.cursor();
