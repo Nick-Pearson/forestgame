@@ -2,12 +2,14 @@ from os import path;
 import time;
 
 class SQLDatabase:
-  def __init__(self, connection):
-    self.c = connection;
+  def __init__(self, connectionfactory):
+    self.connectionfactory = connectionfactory;
     self.initialise_database();
 
   def initialise_database(self):
-    result = self.c.table_exists("db_patch");
+    conn = self.connectionfactory.get_conn();
+    result = conn.table_exists("db_patch");
+    conn.close();
 
     if result == False:
       self.init_from_schema();
@@ -29,6 +31,7 @@ class SQLDatabase:
     print("Determining migration scripts to run");
 
   def run_script(self, script):
+    conn = self.connectionfactory.get_conn();
     cmds = script.split(';')
     for cmd in cmds:
       cmd = cmd.strip();
@@ -36,14 +39,22 @@ class SQLDatabase:
         continue;
       
       try:
-        self.c.execute(cmd);
+        conn.execute(cmd);
       except Exception as e:
         print("exception while executing:\n" + cmd);
         raise e;
+    conn.close();
   
   def get_latest_patch(self):
     return 0;
 
   def record_db_patch(self, patch_id):
     timestamp = int(time.time());
-    self.c.execute("INSERT INTO db_patch (apply_datetime, patch_id) VALUES (%s, %s)", (timestamp, patch_id));
+    conn = self.connectionfactory.get_conn();
+    conn.execute("INSERT INTO db_patch (apply_datetime, patch_id) VALUES (%s, %s)", (timestamp, patch_id));
+    conn.close();
+
+  def execute(self, sql, params=()):
+    conn = self.connectionfactory.get_conn();
+    conn.execute(sql, params);
+    conn.close();

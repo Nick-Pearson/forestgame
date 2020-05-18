@@ -11,10 +11,9 @@ CREATE TABLE client (
   last_datetime BIGINT NOT NULL,
   user_agent VARCHAR(255) NULL,
   user_os_name VARCHAR(64) NULL,
-  user_os_version VARCHAR(64) NULL,
-  user_browser_name VARCHAR(64) NULL,
-  user_browser_version VARCHAR(64) NULL,
-  bot BOOLEAN NULL,
+  user_agent_type VARCHAR(64) NULL,
+  user_agent_family VARCHAR(64) NULL,
+  user_agent_name VARCHAR(64) NULL,
   PRIMARY KEY(uuid)
 );
 

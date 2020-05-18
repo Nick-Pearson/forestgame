@@ -1,7 +1,7 @@
 from flask import *;
 
 from forestgame.database.sql_database import SQLDatabase;
-from forestgame.database.sql_connections import PostgresConnection, InMemoryConnection;
+from forestgame.database.sql_connections import InMemoryConnectionFactory, InMemoryConnectionFactory;
 
 from forestgame.client_registry import ClientRegistry;
 from forestgame.game_registry import GameRegistry;
@@ -32,11 +32,13 @@ CLIENT_ID_COOKIE_KEY = "forestgame_client_id_token"
 CLIENT_ID_COOKIE_EXPIRATION = 30 * DAY
 
 if settings["runMemoryDatabase"]:
-    database = SQLDatabase(InMemoryConnection());
+    factory = InMemoryConnectionFactory();
+    c = factory.get_conn();
+    database = SQLDatabase(factory);
 else:
-    database = SQLDatabase(PostgresConnection(settings["databaseUrl"]));
+    database = SQLDatabase(InMemoryConnectionFactory(settings["databaseUrl"]));
 
-client_registry = ClientRegistry()
+client_registry = ClientRegistry(database);
 game_registry = GameRegistry();
 
 playerHandler = PlayerHandler(game_registry);
@@ -45,9 +47,11 @@ staticDataHandler = StaticDataHandler();
 
 def get_client_id_token(req):
     if CLIENT_ID_COOKIE_KEY in req.cookies:
-        return req.cookies[CLIENT_ID_COOKIE_KEY]
+        client_uuid = req.cookies[CLIENT_ID_COOKIE_KEY];
+        client_registry.refresh_client(client_uuid);
+        return client_uuid
     else:
-        return client_registry.add_player().id
+        return client_registry.add_client(req.headers.get('User-Agent')).id
 
 def set_client_id_token(resp, token):
     resp.set_cookie(CLIENT_ID_COOKIE_KEY, value=token, max_age=CLIENT_ID_COOKIE_EXPIRATION, httponly=True)
