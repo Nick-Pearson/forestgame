@@ -32,6 +32,10 @@ class SQLDatabase:
     c = self.c.conn.cursor();
     cmds = script.split(';')
     for cmd in cmds:
+      cmd = cmd.strip();
+      if len(cmd) == 0:
+        continue;
+      
       try:
         c.execute(cmd);
       except Exception as e:
