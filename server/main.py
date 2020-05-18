@@ -1,5 +1,8 @@
 from flask import *;
 
+from forestgame.database.sql_database import SQLDatabase;
+from forestgame.database.sql_connections import PostgresConnection, InMemoryConnection;
+
 from forestgame.client_registry import ClientRegistry;
 from forestgame.game_registry import GameRegistry;
 from forestgame.request import Request;
@@ -27,6 +30,11 @@ DAY = 24 * HOUR
 
 CLIENT_ID_COOKIE_KEY = "forestgame_client_id_token"
 CLIENT_ID_COOKIE_EXPIRATION = 30 * DAY
+
+if settings["runMemoryDatabase"]:
+    database = SQLDatabase(InMemoryConnection());
+else:
+    database = SQLDatabase(PostgresConnection(settings["databaseUrl"]));
 
 client_registry = ClientRegistry()
 game_registry = GameRegistry();
