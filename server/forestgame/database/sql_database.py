@@ -29,7 +29,6 @@ class SQLDatabase:
     print("Determining migration scripts to run");
 
   def run_script(self, script):
-    c = self.c.conn.cursor();
     cmds = script.split(';')
     for cmd in cmds:
       cmd = cmd.strip();
@@ -37,11 +36,10 @@ class SQLDatabase:
         continue;
       
       try:
-        c.execute(cmd);
+        self.c.execute(cmd);
       except Exception as e:
         print("exception while executing:\n" + cmd);
         raise e;
-    c.close();
   
   def get_latest_patch(self):
     return 0;

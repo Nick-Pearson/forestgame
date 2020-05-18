@@ -11,7 +11,7 @@ class InMemoryConnection:
     result = self.conn.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='" + table + "'");
     return len(result.fetchall()) != 0;
 
-  def execute(self, sql, params):
+  def execute(self, sql, params=()):
     sql = re.sub("%\S?", "?", sql)
     self.conn.execute(sql, params);
 
@@ -26,7 +26,8 @@ class PostgresConnection:
     cur.close();
     return result != None;
 
-  def execute(self, sql, params):
+  def execute(self, sql, params=()):
     cur = self.conn.cursor();
     cur.execute(sql, params);
+    cur.commit();
     cur.close();
