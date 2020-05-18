@@ -33,7 +33,7 @@ class SQLDatabase:
     cmds = script.split(';')
     for cmd in cmds:
       try:
-        c.executescript(cmd);
+        c.execute(cmd);
       except Exception as e:
         print("exception while executing:\n" + cmd);
         raise e;
