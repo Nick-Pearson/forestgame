@@ -45,10 +45,11 @@ playerHandler = PlayerHandler(game_registry);
 gameHandler = GameHandler(game_registry);
 staticDataHandler = StaticDataHandler();
 
-def get_client_id_token(req):
+def get_client_id_token(req, refresh_client):
     if CLIENT_ID_COOKIE_KEY in req.cookies:
         client_uuid = req.cookies[CLIENT_ID_COOKIE_KEY];
-        client_registry.refresh_client(client_uuid);
+        if refresh_client:
+            client_registry.refresh_client(client_uuid);
         return client_uuid
     else:
         return client_registry.add_client(req.headers.get('User-Agent')).id
@@ -63,7 +64,7 @@ def no_params_page(u_path):
     if u_path.startswith('api'):
         abort(404);
     
-    player_id = get_client_id_token(request)
+    player_id = get_client_id_token(request, len(u_path) == 0)
 
     response = send_from_directory(DIST_DIRECTORY, 'index.html')
     set_client_id_token(response, player_id)
@@ -74,7 +75,7 @@ def static_script():
     return send_from_directory(DIST_DIRECTORY, 'game.js')
 
 def build_request(path):
-    client_id = get_client_id_token(request);
+    client_id = get_client_id_token(request, False);
     return Request(client_id, path, request.get_json(), request.args);
 
 def handle_exception(e):

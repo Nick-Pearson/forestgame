@@ -14,6 +14,14 @@ class InMemoryConnection:
   def execute(self, sql, params=()):
     sql = re.sub("%\S?", "?", sql)
     self.conn.execute(sql, params);
+    self.conn.commit();
+  
+  def query(self, sql, params=()):
+    cur = self.conn.cursor();
+    cur.execute(sql, params);
+    result = cur.fetchall()
+    cur.close();
+    return result;
 
   def close(self):
     self.conn.close();
@@ -38,6 +46,13 @@ class PostgresConnection:
     cur.execute(sql, params);
     self.conn.commit();
     cur.close();
+  
+  def query(self, sql, params=()):
+    cur = self.conn.cursor();
+    cur.execute(sql, params);
+    result = cur.fetchall()
+    cur.close();
+    return result;
 
   def close(self):
     self.conn.close();

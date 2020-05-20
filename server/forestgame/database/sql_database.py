@@ -28,7 +28,19 @@ class SQLDatabase:
       self.record_db_patch(i);
 
   def migrate_database(self):
-    print("Determining migration scripts to run");
+    conn = self.connectionfactory.get_conn();
+    last_patch = conn.query("SELECT patch_id FROM db_patch ORDER BY patch_id DESC LIMIT 1")[0][0];
+    conn.close();
+    latest_patch = self.get_latest_patch();
+
+    for i in range(last_patch + 1, latest_patch + 1):
+      print("Running migration script patch" + str(i) + ".sql");
+
+      patch_path = path.join(path.dirname(__file__), "patch", "patch" + str(i) + ".sql");
+      with open(patch_path, 'r') as f:
+        self.run_script(f.read());
+      
+      self.record_db_patch(i);
 
   def run_script(self, script):
     conn = self.connectionfactory.get_conn();
@@ -46,7 +58,7 @@ class SQLDatabase:
     conn.close();
   
   def get_latest_patch(self):
-    return 0;
+    return 1;
 
   def record_db_patch(self, patch_id):
     timestamp = int(time.time());

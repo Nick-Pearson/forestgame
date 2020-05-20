@@ -19,7 +19,27 @@ class Client:
         self.bot = agent_data.get("bot");
 
     def persist(self, db):
-        pass;
+        db.execute("""
+            INSERT INTO client (uuid,
+                                create_datetime,
+                                last_datetime,
+                                user_agent,
+                                user_os_name,
+                                user_os_version,
+                                user_browser_name,
+                                user_browser_version,
+                                bot)
+                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)""", 
+                    (self.id,
+                        self.create_datetime, 
+                        self.last_datetime, 
+                        self.user_agent, 
+                        self.user_os_name, 
+                        self.user_os_version,
+                        self.user_browser_name, 
+                        self.user_browser_version, 
+                        self.bot)
+        );
 
 class ClientRegistry:
     def __init__(self, db):
