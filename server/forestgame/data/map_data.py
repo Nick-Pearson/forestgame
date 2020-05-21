@@ -1,20 +1,20 @@
 class Map:
-  def __init__(self, id, name, sizeX, sizeY, playerStarts, features, mapData):
-    self.id = id;
-    self.name = name;
-    self.maxPlayers = len(playerStarts);
-    self.sizeX = sizeX;
-    self.sizeY = sizeY;
-    self.playerStarts = playerStarts;
+  def __init__(self, map_id, name, size_x, size_y, player_starts, features, map_data):
+    self.map_id = map_id
+    self.name = name
+    self.max_players = len(player_starts)
+    self.size_x = size_x
+    self.size_y = size_y
+    self.player_starts = player_starts
     self.features = features
-    self.mapData = mapData
+    self.map_data = map_data
 
-quadrantPlayerStarts = [
+quadrantplayer_starts = [
   (10, 5),
   (30, 15),
   (10, 15),
   (30, 5),
-];
+]
 quadrantFeatures = {
   "hill": (20, 10)
 }
@@ -24,7 +24,7 @@ fourCornersStarts = [
   (15, 15),
   (0, 15),
   (15, 0),
-];
+]
 fourCornersFeatures = {
   "hill": (7, 7)
 }
@@ -34,11 +34,11 @@ mountainWallStarts = [
   (5, 15),
   (13, 3),
   (13, 15),
-];
+]
 mountainWallFeatures = {
   "hill": (9, 9)
 }
-mountainWallMapData = [
+mountainWallmap_data = [
   (5, 7, 3),
   (5, 6, 3),
   (6, 6, 3),
@@ -65,13 +65,13 @@ mountainWallMapData = [
 ]
 
 MAPS = [
-  Map("2", "Mountain Wall", 19, 19, mountainWallStarts, mountainWallFeatures, mountainWallMapData),
-  Map("0",  "Quadrant", 41, 21, quadrantPlayerStarts, quadrantFeatures, []),
+  Map("2", "Mountain Wall", 19, 19, mountainWallStarts, mountainWallFeatures, mountainWallmap_data),
+  Map("0", "Quadrant", 41, 21, quadrantplayer_starts, quadrantFeatures, []),
   Map("1", "4 Corners", 16, 16, fourCornersStarts, fourCornersFeatures, []),
-];
+]
 
-def get_map_for_id(id):
-  for m in MAPS:
-    if m.id == id:
-      return m;
-  return None;
+def get_map_for_id(map_id):
+  for map_instance in MAPS:
+    if map_instance.map_id == map_id:
+      return map_instance
+  return None

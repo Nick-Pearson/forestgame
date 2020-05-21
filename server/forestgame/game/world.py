@@ -2,51 +2,51 @@
 
 class World:
   def __init__(self):
-    self.__tileData = [];
-    self.__buildingData = [];
-    self.__sizeX = 0;
-    self.__sizeY = 0;
-    
+    self.__tile_data = []
+    self.__building_data = []
+    self.__size_x = 0
+    self.__size_y = 0
+
   def set_size(self, x, y):
-    if y > self.__sizeY:
-      diff = y - self.__sizeY;
-      self.__tileData = self.__tileData + [[1] * self.__sizeX] * diff;
-    elif y < self.__sizeY:
-      self.__tileData = self.__tileData[:y];
+    if y > self.__size_y:
+      diff = y - self.__size_y
+      self.__tile_data = self.__tile_data + [[1] * self.__size_x] * diff
+    elif y < self.__size_y:
+      self.__tile_data = self.__tile_data[:y]
 
-    if x > self.__sizeX:
-      diff = x - self.__sizeX;
-      for i in range(0, len(self.__tileData)):
-        self.__tileData[i] = self.__tileData[i] + [1] * diff
-    elif x < self.__sizeX:
-      for i in range(0, len(self.__tileData)):
-        self.__tileData[i] = self.__tileData[i][:x]
+    if x > self.__size_x:
+      diff = x - self.__size_x
+      for i in range(0, len(self.__tile_data)):
+        self.__tile_data[i] = self.__tile_data[i] + [1] * diff
+    elif x < self.__size_x:
+      for i in range(0, len(self.__tile_data)):
+        self.__tile_data[i] = self.__tile_data[i][:x]
 
-    self.__sizeX = x;
-    self.__sizeY = y;
+    self.__size_x = x
+    self.__size_y = y
 
-  def set_tile_at(self, x, y, tileId):
-    self.__tileData[y][x] = tileId;
+  def set_tile_at(self, x, y, tile_id):
+    self.__tile_data[y][x] = tile_id
 
   def get_tile_at(self, x, y):
-    return self.__tileData[y][x];
+    return self.__tile_data[y][x]
 
-  def set_building_at(self, x, y, buildingId, ownerId):
-    self.__buildingData.append({
+  def set_building_at(self, x, y, building_id, owner_id):
+    self.__building_data.append({
       "x": x,
       "y": y,
-      "id": buildingId,
-      "ownerId": ownerId,
-    });
-  
+      "id": building_id,
+      "owner_id": owner_id,
+    })
+
   def get_size_x(self):
-    return self.__sizeX;
-  
+    return self.__size_x
+
   def get_size_y(self):
-    return self.__sizeY;
-  
+    return self.__size_y
+
   def get_tile_data(self):
-    return self.__tileData;
+    return self.__tile_data
 
   def get_building_data(self):
-    return self.__buildingData;
+    return self.__building_data

@@ -1,52 +1,50 @@
-from forestgame.data.building_data import BUILDINGS;
-from forestgame.data.map_data import MAPS, get_map_for_id;
+from io import BytesIO
 
-from flask import send_file;
-from io import BytesIO;
-from PIL import Image, ImageDraw
+from flask import send_file
+from PIL import Image
 
-def generate_thumbnail_for_map(mapI, maxPlayers):
-  img = Image.new('RGB', (mapI.sizeX, mapI.sizeY), color = (19, 122, 20));
-  pixels = img.load();
+from forestgame.data.building_data import BUILDINGS
+from forestgame.data.map_data import MAPS, get_map_for_id
 
-  maxPlayers = min(maxPlayers, len(mapI.playerStarts));
-  for i in range(0, maxPlayers):
-    playerStart = mapI.playerStarts[i]
-    pixels[playerStart[0],playerStart[1]] = (255, 255, 255)
+def generate_thumbnail_for_map(map_instance, max_players):
+  img = Image.new('RGB', (map_instance.size_x, map_instance.size_y), color=(19, 122, 20))
+  pixels = img.load()
 
-  for k in mapI.features:
-    coords = mapI.features[k];
+  max_players = min(max_players, len(map_instance.player_starts))
+  for i in range(0, max_players):
+    player_start = map_instance.player_starts[i]
+    pixels[player_start[0], player_start[1]] = (255, 255, 255)
+
+  for k in map_instance.features:
+    coords = map_instance.features[k]
     pixels[coords[0], coords[1]] = (255, 0, 0)
 
-  for (x, y, tid) in mapI.mapData:
+  for (x, y) in map_instance.map_data:
     pixels[x, y] = (0, 0, 0)
 
-  return img;
+  return img
 
 class StaticDataHandler():
   def get_buildings(self):
-    return {"buildings": BUILDINGS};
+    return {"buildings": BUILDINGS}
 
   def get_maps(self):
-    maps = [{"name": m.name, "id": m.id, "maxPlayers": m.maxPlayers} for m in MAPS];
-    return {"maps": maps};
+    maps = [{"name": map_inst.name, "id": map_inst.map_id, "max_players": map_inst.max_players} for map_inst in MAPS]
+    return {"maps": maps}
 
   def get_map_thumbnail(self, request):
-    mapId = request.path["map_id"];
-    mapI = get_map_for_id(mapId);
-    maxPlayers = int(request.query.get("maxPlayers", "2"));
-    image = generate_thumbnail_for_map(mapI, maxPlayers);
+    map_instanced = request.path["map_id"]
+    map_instance = get_map_for_id(map_instanced)
+    max_players = int(request.query.get("max_players", "2"))
+    image = generate_thumbnail_for_map(map_instance, max_players)
 
     output = BytesIO()
     image.save(output, format='PNG')
     output.seek(0, 0)
 
-    return send_file(output, mimetype='image/png');
+    return send_file(output, mimetype='image/png')
 
   def get_map(self, request):
-    mapId = request.path["map_id"];
-    m = get_map_for_id(mapId);
-    return {"name": m.name, "id": m.id, "maxPlayers": m.maxPlayers}
-
-    
-  
+    map_instanced = request.path["map_id"]
+    map_inst = get_map_for_id(map_instanced)
+    return {"name": map_inst.name, "id": map_inst.map_id, "max_players": map_inst.max_players}

@@ -30,10 +30,10 @@ BUILDINGS = [
       "gold": 15
     }
   },
-];
+]
 
-def get_building_for_id(id):
+def get_building_for_id(building_id):
   for building in BUILDINGS:
-    if building["id"] == id:
-      return building;
-  return None;
+    if building["id"] == building_id:
+      return building
+  return None
