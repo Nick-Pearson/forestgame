@@ -10,6 +10,7 @@ before_install:
   - node --version
   - npm install -g eslint
   - python -m pip install -U --force-reinstall pip
+  - pip install pylint
 
 install:
   - npm install
@@ -18,6 +19,7 @@ install:
 script:
   - python -m unittest discover -v -s ./server -p test_*.py
   - eslint client/**/*.js
+  - pylint --rcfile=./server/.pylintrc --output-format=text ./server
 
 after_success:
   - git stash --all

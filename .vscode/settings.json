@@ -15,5 +15,5 @@
     ],
     "python.linting.pylintEnabled": true,
     "python.linting.enabled": true,
-    "python.linting.pylintArgs": ["--disable", "import-error"]
+    "python.linting.pylintArgs": ["--rcfile=./server/.pylintrc"]
 }
