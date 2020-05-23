@@ -39,7 +39,7 @@ class PostgresConnection:
     cur.execute("SELECT to_regclass('public." + table + "')")
     result = cur.fetchall()
     cur.close()
-    return len(result) != 0
+    return result[0][0] is not None
 
   def execute(self, sql, params=()):
     cur = self.conn.cursor()

@@ -1,5 +1,4 @@
 import unittest
-import re
 import os
 from os import path
 import subprocess
@@ -48,7 +47,7 @@ class MigrateDatabaseTest(unittest.TestCase):
 
     SQLDatabase(connection_factory)
     dump = self.get_postgres_dump()
-    
+
     conn.execute("DROP SCHEMA public CASCADE; CREATE SCHEMA public;")
     SQLDatabase(connection_factory)
     expected = self.get_postgres_dump()
@@ -56,6 +55,6 @@ class MigrateDatabaseTest(unittest.TestCase):
 
   def get_postgres_dump(self):
     out = subprocess.Popen(['pg_dump', '-s', 'forest_integration_test'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-    stdout = out.communicate()
+    stdout = out.communicate()[0]
     print(stdout)
     return stdout
