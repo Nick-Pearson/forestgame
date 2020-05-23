@@ -86,7 +86,7 @@ class GameHandler():
     game_id = request.path["game_id"]
     body = request.body
     x = body["x"]
-    y = body["y"];
+    y = body["y"]
     building_id = body["building_id"]
     building = get_building_for_id(building_id)
     game = self.lookup_game(game_id)
