@@ -9,7 +9,11 @@ from forestgame.database.sql_database import SQLDatabase
 class MigrateDatabaseTest(unittest.TestCase):
   def get_connection_factory(self):
     if "DATABASE_URL" in os.environ:
-      return PostgresConnectionFactory(os.environ["DATABASE_URL"])
+      factory = PostgresConnectionFactory(os.environ["DATABASE_URL"])
+      conn = factory.get_conn()
+      conn.execute("DROP SCHEMA public CASCADE; CREATE SCHEMA public;")
+      conn.close()
+      return factory
     return InMemoryConnectionFactory()
 
   def test_inits_fresh_database_to_schema(self):
