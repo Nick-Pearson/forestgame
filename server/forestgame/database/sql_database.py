@@ -53,7 +53,7 @@ class SQLDatabase:
       try:
         conn.execute(cmd)
       except Exception as exception:
-        print("exception while executing:\n" + cmd)
+        print("Exception while executing: \"" + cmd + "\"")
         raise exception
     conn.close()
 
