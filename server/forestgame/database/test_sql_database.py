@@ -42,7 +42,7 @@ class MigrateDatabaseTest(unittest.TestCase):
     conn = connection_factory.get_conn()
     schema_path = path.join(path.dirname(__file__), "patch", "baseschema.sql")
     with open(schema_path, 'r') as file:
-      conn.conn.execute(file.read())
+      conn.execute(file.read())
     conn.execute("INSERT INTO db_patch (apply_datetime, patch_id) VALUES (0, 0)")
 
     SQLDatabase(connection_factory)
