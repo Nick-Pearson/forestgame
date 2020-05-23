@@ -1,32 +1,40 @@
 import unittest
 import re
+import os
 from os import path
 
-from forestgame.database.sql_connections import InMemoryConnectionFactory
+from forestgame.database.sql_connections import InMemoryConnectionFactory, PostgresConnectionFactory
 from forestgame.database.sql_database import SQLDatabase
 
 class MigrateDatabaseTest(unittest.TestCase):
+  def get_connection_factory(self):
+    if "DATABASE_URL" in os.environ:
+      return PostgresConnectionFactory(os.environ["DATABASE_URL"])
+    return InMemoryConnectionFactory()
+
   def test_inits_fresh_database_to_schema(self):
-    connection_factory = InMemoryConnectionFactory()
-    conn = connection_factory.get_conn().conn
+    connection_factory = self.get_connection_factory()
+    conn = connection_factory.get_conn()
 
     SQLDatabase(connection_factory)
 
-    all_tables = conn.execute("SELECT name FROM sqlite_master WHERE type='table'").fetchall()
-    self.assertEqual("db_patch", all_tables[0][0])
+    self.assertTrue(conn.table_exists("db_patch"))
 
   def test_init_after_setup_does_not_init_again(self):
-    connection_factory = InMemoryConnectionFactory()
-    conn = connection_factory.get_conn().conn
+    connection_factory = self.get_connection_factory()
+    conn = connection_factory.get_conn()
     SQLDatabase(connection_factory)
 
     SQLDatabase(connection_factory)
 
-    all_tables = conn.execute("SELECT name FROM sqlite_master WHERE type='table'").fetchall()
-    self.assertEqual("db_patch", all_tables[0][0])
+    self.assertTrue(conn.table_exists("db_patch"))
 
   def test_init_from_base_patches_up_to_latest(self):
-    connection_factory = InMemoryConnectionFactory()
+    connection_factory = self.get_connection_factory()
+    if not isinstance(connection_factory, PostgresConnectionFactory):
+      self.skipTest("Postgres DB not available")
+      return
+
     conn = connection_factory.get_conn()
     schema_path = path.join(path.dirname(__file__), "patch", "baseschema.sql")
     with open(schema_path, 'r') as file:

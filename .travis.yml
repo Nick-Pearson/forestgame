@@ -7,16 +7,16 @@ services:
 
 before_install:
   - nvm install 12
-  - node --version
   - npm install -g eslint
   - python -m pip install -U --force-reinstall pip
-  - pip install pylint
-  - sudo pip install --upgrade pysqlite
-  - python -c "import sqlite3; print(sqlite3.sqlite_version)"
 
 install:
   - npm install
   - pip install -r ./server/requirements.txt
+  - pip install pylint
+
+before_script:
+  - psql -c 'create database forest_integration_test;' -U postgres
 
 script:
   - python -m unittest discover -v -s ./server -p test_*.py
