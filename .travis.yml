@@ -11,6 +11,7 @@ before_install:
   - npm install -g eslint
   - python -m pip install -U --force-reinstall pip
   - pip install pylint
+  - sudo pip install --upgrade pysqlite
   - python -c "import sqlite3; print(sqlite3.sqlite_version)"
 
 install:
