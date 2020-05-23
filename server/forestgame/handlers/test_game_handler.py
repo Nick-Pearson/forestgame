@@ -118,7 +118,7 @@ class CreateGameTest(unittest.TestCase):
     game = self.game_registry.create_game(CLIENT_ID, GAME_ID)
     game.world.set_size(5, 5)
 
-    resp = self.handler.create_game(Request(CLIENT_ID, {}, {"map_instd": "0", "max_players": "2"}))
+    resp = self.handler.create_game(Request(CLIENT_ID, {}, {"map_id": "0", "max_players": "2"}))
 
     game = self.game_registry.get_game_for_id(resp["game_id"])
     self.assertNotEqual(None, game)
@@ -182,7 +182,7 @@ class GameDataTest(unittest.TestCase):
     self.assertEqual(GAME_ID, resp["game_id"])
     self.assertEqual(4, resp["max_players"])
     self.assertEqual(1, resp["numPlayers"])
-    self.assertEqual("0", resp["map_instd"])
+    self.assertEqual("0", resp["map_id"])
     self.assertEqual("King of the Hill", resp["gameModeName"])
 
 class JoinGameTest(unittest.TestCase):

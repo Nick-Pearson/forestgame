@@ -19,7 +19,7 @@ class GameHandler():
     game = self.game_regsitry.create_game(request.client_id)
     map_inst = get_map_for_id(request.body["map_id"])
     game.init_from_map(map_inst, int(request.body["max_players"]))
-    return {"game_id": game.id}
+    return {"game_id": game.game_id}
 
   def join_game(self, request):
     invite_code = request.path["invite_code"].upper()
@@ -27,7 +27,7 @@ class GameHandler():
     game = self.game_regsitry.get_game_for_invite_code(invite_code)
     player = game.add_player(request.client_id)
     player.name = name
-    return {"game_id": game.id}
+    return {"game_id": game.game_id}
 
   def get_world(self, request):
     game_id = request.path["game_id"]
@@ -47,7 +47,7 @@ class GameHandler():
     return {
       "players": [
         {
-          "id": p.id,
+          "id": p.player_id,
           "me": p.client_id == request.client_id,
           "colour": colour_to_hex(p.colour),
           "name": p.name,
@@ -61,8 +61,8 @@ class GameHandler():
     game = self.lookup_game(game_id)
 
     return {
-      "game_id": game.id,
-      "inviteCode": game.inviteCode,
+      "game_id": game.game_id,
+      "inviteCode": game.invite_code,
       "state": "GAME",
       "max_players": game.max_players,
       "numPlayers": game.num_players(),
@@ -93,6 +93,6 @@ class GameHandler():
 
     player = game.get_player_for_client_id(request.client_id)
     player.spend(building["cost"])
-    game.world.set_building_at(x, y, building_id, player.id)
+    game.world.set_building_at(x, y, building_id, player.player_id)
     game.world.set_tile_at(x, y, 0)
     return {}

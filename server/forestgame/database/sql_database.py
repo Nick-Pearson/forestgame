@@ -44,7 +44,7 @@ class SQLDatabase:
 
   def run_script(self, script):
     conn = self.connectionfactory.get_conn()
-    cmds = script.split('')
+    cmds = script.split(';')
     for cmd in cmds:
       cmd = cmd.strip()
       if len(cmd) == 0:
