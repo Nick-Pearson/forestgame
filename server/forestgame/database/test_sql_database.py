@@ -2,6 +2,7 @@ import unittest
 import re
 import os
 from os import path
+import subprocess
 
 from forestgame.database.sql_connections import InMemoryConnectionFactory, PostgresConnectionFactory
 from forestgame.database.sql_database import SQLDatabase
@@ -46,20 +47,15 @@ class MigrateDatabaseTest(unittest.TestCase):
     conn.execute("INSERT INTO db_patch (apply_datetime, patch_id) VALUES (0, 0)")
 
     SQLDatabase(connection_factory)
-    dump = conn.query("SELECT sql FROM sqlite_master WHERE type = 'table'")
-    conn.close()
-
-    conn = connection_factory.get_conn()
+    dump = self.get_postgres_dump()
+    
+    conn.execute("DROP SCHEMA public CASCADE; CREATE SCHEMA public;")
     SQLDatabase(connection_factory)
-    expected = conn.query("SELECT sql FROM sqlite_master WHERE type = 'table'")
-    self.assertEqual(len(expected), len(dump))
-    for i in range(0, len(dump)):
-      self.assert_string_contents_equal(dump[i][0], expected[i][0])
+    expected = self.get_postgres_dump()
+    self.assertEqual(expected, dump)
 
-  def assert_string_contents_equal(self, str1, str2):
-    regex = '[\n| |\t]'
-    str1 = re.sub(regex, '', str1)
-    str1 = re.sub(',', ',\n', str1)
-    str2 = re.sub(regex, '', str2)
-    str2 = re.sub(',', ',\n', str2)
-    self.assertEqual(str1, str2)
+  def get_postgres_dump(self):
+    out = subprocess.Popen(['pg_dump', '-s', 'forest_integration_test'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    stdout = out.communicate()
+    print(stdout)
+    return stdout
