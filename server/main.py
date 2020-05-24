@@ -41,7 +41,7 @@ else:
   database = SQLDatabase(PostgresConnectionFactory(settings["databaseUrl"]))
 
 client_registry = ClientRegistry(database)
-game_registry = GameRegistry()
+game_registry = GameRegistry(database)
 
 playerHandler = PlayerHandler(game_registry)
 gameHandler = GameHandler(game_registry)

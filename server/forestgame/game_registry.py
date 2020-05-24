@@ -30,6 +30,32 @@ class Player:
     self.name = name
     self.stats = stats
 
+  def insert_to_db(self, db, game_id):
+    db.execute("""
+      INSERT INTO game_player (game_uuid,
+                                client_uuid,
+                                player_idx,
+                                name,
+                                colour_r,
+                                colour_g,
+                                colour_b,
+                                population,
+                                wood,
+                                coin,
+                                food)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)""",
+               (game_id,
+                self.client_id,
+                self.player_id,
+                self.name,
+                self.colour[0],
+                self.colour[1],
+                self.colour[2],
+                self.stats.population,
+                self.stats.wood,
+                self.stats.coin,
+                self.stats.food))
+
 startingColours = [
   (204, 0, 0), # red
   (51, 102, 153), # blue
@@ -44,7 +70,8 @@ def generate_invite_code():
   return random.choice(INVITE_CODE_CHARS) + random.choice(INVITE_CODE_CHARS) + random.choice(INVITE_CODE_CHARS) + random.choice(INVITE_CODE_CHARS)
 
 class Game:
-  def __init__(self, game_id, host, players, max_players, world_uuid, invite_code, is_lobby, is_archived):
+  def __init__(self, db, game_id, host, players, max_players, world_uuid, invite_code, is_lobby, is_archived):
+    self.db = db
     self.game_id = game_id
     self.host = host
     self._players = players
@@ -61,6 +88,7 @@ class Game:
     player_idx = len(self._players)
     colour = startingColours[player_idx % len(startingColours)]
     player = Player(client_id, player_idx, colour, "Player " + str(player_idx), Stats(30, 0, 0, 60))
+    player.insert_to_db(self.db, self.game_id)
     self._players[client_id] = player
     return player
 
@@ -123,7 +151,15 @@ class GameRegistry:
 
     db_result = self.db.query("""SELECT client_uuid, player_idx, name, colour_r, colour_g, colour_b, population, wood, coin, food
                                 FROM game_player WHERE game_uuid=%s""", (game_id, ))
-    return Game(game_id, str(row[1]), {}, int(row[2]), str(row[3]), str(row[4]), bool(row[5]), bool(row[6]))
+    players = {}
+    for player_row in db_result:
+      client_uuid = player_row[0]
+      colour = (player_row[3], player_row[4], player_row[5])
+      stats = Stats(player_row[6], player_row[7], player_row[8], player_row[9])
+
+      players[client_uuid] = Player(client_uuid, player_row[1], colour, player_row[2], stats)
+
+    return Game(self.db, game_id, str(row[1]), players, int(row[2]), str(row[3]), str(row[4]), bool(row[5]), bool(row[6]))
 
   def get_game_for_id(self, game_id):
     return self.__get_game_from_db("WHERE uuid=%s", (game_id, ))
@@ -135,7 +171,7 @@ class GameRegistry:
     if game_id is None:
       game_id = str(uuid.uuid4())
 
-    game = Game(game_id, host, {}, 0, str(uuid.uuid4()), generate_invite_code(), True, False)
+    game = Game(self.db, game_id, host, {}, 0, str(uuid.uuid4()), generate_invite_code(), True, False)
     game.insert_to_db(self.db)
     game.add_player(host)
     return game
