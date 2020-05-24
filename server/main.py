@@ -66,10 +66,10 @@ def no_params_page(u_path):
   if u_path.startswith('api'):
     abort(404)
 
-  player_id = get_client_id_token(request, len(u_path) == 0)
+  client_id = get_client_id_token(request, len(u_path) == 0)
 
   response = send_from_directory(DIST_DIRECTORY, 'index.html')
-  set_client_id_token(response, player_id)
+  set_client_id_token(response, client_id)
   return response
 
 @app.route('/game.js')

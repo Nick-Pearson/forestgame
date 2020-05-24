@@ -17,6 +17,7 @@ class InMemoryConnection:
     self.conn.commit()
 
   def query(self, sql, params=()):
+    sql = re.sub(r"%\S?", "?", sql)
     cur = self.conn.cursor()
     cur.execute(sql, params)
     result = cur.fetchall()
@@ -27,6 +28,10 @@ class InMemoryConnection:
     self.conn.close()
 
 class InMemoryConnectionFactory:
+  def __init__(self):
+    # keep a persistent connection open
+    self.__conn = InMemoryConnection()
+
   def get_conn(self):
     return InMemoryConnection()
 

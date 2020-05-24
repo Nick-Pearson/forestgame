@@ -6,14 +6,18 @@ from forestgame.handlers.handler_exceptions import ResourceNotFoundException
 from forestgame.game_registry import GameRegistry
 from forestgame.request import Request
 
+from forestgame.database.sql_connections import InMemoryConnectionFactory
+from forestgame.database.sql_database import SQLDatabase
+
 GAME_ID = "d01823a0-8667-41dc-a63f-0af11564fd87"
 CLIENT_ID = "21fd7079-c7d8-48a7-8663-db924724f98e"
 
-class PlayerNameTest(unittest.TestCase):
-  def __init__(self, methodName):
-    super(PlayerNameTest, self).__init__(methodName)
+def generate_test_db():
+  return SQLDatabase(InMemoryConnectionFactory())
 
-    self.game_registry = GameRegistry()
+class PlayerNameTest(unittest.TestCase):
+  def setUp(self):
+    self.game_registry = GameRegistry(generate_test_db())
     self.handler = PlayerHandler(self.game_registry)
 
   def test_get_for_non_existant_game_returns_not_found(self):
@@ -82,7 +86,7 @@ class PlayerStatsTest(unittest.TestCase):
   def __init__(self, methodName):
     super(PlayerStatsTest, self).__init__(methodName)
 
-    self.game_registry = GameRegistry()
+    self.game_registry = GameRegistry(generate_test_db())
     self.handler = PlayerHandler(self.game_registry)
 
   def test_get_for_non_existant_game_returns_not_found(self):

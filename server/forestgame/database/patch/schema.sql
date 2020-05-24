@@ -18,14 +18,25 @@ CREATE TABLE client (
   PRIMARY KEY(uuid)
 );
 
+CREATE TABLE world (
+  uuid CHAR(36) NOT NULL,
+  map_id VARCHAR(8) NOT NULL,
+  size_x INT NOT NULL,
+  size_y INT NOT NULL,
+  PRIMARY KEY (uuid)
+);
+
 CREATE TABLE game (
   uuid CHAR(36) NOT NULL,
+  create_datetime BIGINT NOT NULL,
   host_uuid CHAR(36) NOT NULL,
   invite_code CHAR(4) NOT NULL,
-  state CHAR(5) NOT NULL,
-  maxPlayers INT NOT NULL,
-  mapId INT NOT NULL,
+  is_lobby BOOLEAN NOT NULL,
+  is_archived BOOLEAN NOT NULL,
+  max_players INT NOT NULL,
+  world_uuid INT NOT NULL,
   FOREIGN KEY (host_uuid) REFERENCES client(uuid),
+  FOREIGN KEY (world_uuid) REFERENCES world(uuid),
   PRIMARY KEY (uuid)
 );
 

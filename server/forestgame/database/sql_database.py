@@ -70,3 +70,10 @@ class SQLDatabase:
     conn = self.connectionfactory.get_conn()
     conn.execute(sql, params)
     conn.close()
+  
+  def query(self, sql, params=()):
+    conn = self.connectionfactory.get_conn()
+    result = conn.query(sql, params)
+    conn.close()
+    return result
+

@@ -5,14 +5,18 @@ from forestgame.game_registry import GameRegistry
 from forestgame.request import Request
 from forestgame.data.map_data import Map
 
+from forestgame.database.sql_connections import InMemoryConnectionFactory
+from forestgame.database.sql_database import SQLDatabase
+
 GAME_ID = "9ced424f-91c2-47b2-a8ea-6a4bb38f2d2b"
 CLIENT_ID = "6fb8d67c-fee3-437d-9d08-05c27d8a9d15"
 
-class GameWorldTest(unittest.TestCase):
-  def __init__(self, methodName):
-    super(GameWorldTest, self).__init__(methodName)
+def generate_test_db():
+  return SQLDatabase(InMemoryConnectionFactory())
 
-    self.game_registry = GameRegistry()
+class GameWorldTest(unittest.TestCase):
+  def setUp(self):
+    self.game_registry = GameRegistry(generate_test_db())
     self.handler = GameHandler(self.game_registry)
 
   #missing game
@@ -35,10 +39,8 @@ class GameWorldTest(unittest.TestCase):
 
 
 class DeforestTest(unittest.TestCase):
-  def __init__(self, methodName):
-    super(DeforestTest, self).__init__(methodName)
-
-    self.game_registry = GameRegistry()
+  def setUp(self):
+    self.game_registry = GameRegistry(generate_test_db())
     self.handler = GameHandler(self.game_registry)
 
   #missing game
@@ -66,10 +68,8 @@ class DeforestTest(unittest.TestCase):
     self.assertEqual(expected_tiles, resp["tileData"])
 
 class BuildTest(unittest.TestCase):
-  def __init__(self, methodName):
-    super(BuildTest, self).__init__(methodName)
-
-    self.game_registry = GameRegistry()
+  def setUp(self):
+    self.game_registry = GameRegistry(generate_test_db())
     self.handler = GameHandler(self.game_registry)
 
   #missing game
@@ -103,10 +103,8 @@ class BuildTest(unittest.TestCase):
 
 
 class CreateGameTest(unittest.TestCase):
-  def __init__(self, methodName):
-    super(CreateGameTest, self).__init__(methodName)
-
-    self.game_registry = GameRegistry()
+  def setUp(self):
+    self.game_registry = GameRegistry(generate_test_db())
     self.handler = GameHandler(self.game_registry)
 
   #missing game
@@ -115,9 +113,6 @@ class CreateGameTest(unittest.TestCase):
   #missing data in request
 
   def test_create_game_adds_game_to_registrty_with_that_id(self):
-    game = self.game_registry.create_game(CLIENT_ID, GAME_ID)
-    game.world.set_size(5, 5)
-
     resp = self.handler.create_game(Request(CLIENT_ID, {}, {"map_id": "0", "max_players": "2"}))
 
     game = self.game_registry.get_game_for_id(resp["game_id"])
@@ -127,10 +122,8 @@ class CreateGameTest(unittest.TestCase):
     self.assertEqual(CLIENT_ID, game.host)
 
 class GetPlayersTest(unittest.TestCase):
-  def __init__(self, methodName):
-    super(GetPlayersTest, self).__init__(methodName)
-
-    self.game_registry = GameRegistry()
+  def setUp(self):
+    self.game_registry = GameRegistry(generate_test_db())
     self.handler = GameHandler(self.game_registry)
 
   # game not found
@@ -163,10 +156,8 @@ class GetPlayersTest(unittest.TestCase):
     self.assertEqual(False, players[3]["me"])
 
 class GameDataTest(unittest.TestCase):
-  def __init__(self, methodName):
-    super(GameDataTest, self).__init__(methodName)
-
-    self.game_registry = GameRegistry()
+  def setUp(self):
+    self.game_registry = GameRegistry(generate_test_db())
     self.handler = GameHandler(self.game_registry)
 
   # game not found
@@ -186,10 +177,8 @@ class GameDataTest(unittest.TestCase):
     self.assertEqual("King of the Hill", resp["gameModeName"])
 
 class JoinGameTest(unittest.TestCase):
-  def __init__(self, methodName):
-    super(JoinGameTest, self).__init__(methodName)
-
-    self.game_registry = GameRegistry()
+  def setUp(self):
+    self.game_registry = GameRegistry(generate_test_db())
     self.handler = GameHandler(self.game_registry)
 
   # game not found

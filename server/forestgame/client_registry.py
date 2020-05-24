@@ -18,7 +18,7 @@ class Client:
     self.user_browser_version = browser_data.get("version")
     self.bot = agent_data.get("bot")
 
-  def persist(self, db):
+  def insert_to_db(self, db):
     db.execute("""
         INSERT INTO client (uuid,
                             create_datetime,
@@ -50,5 +50,5 @@ class ClientRegistry:
 
   def add_client(self, user_agent):
     client = Client(str(uuid.uuid4()), user_agent)
-    client.persist(self.db)
+    client.insert_to_db(self.db)
     return client
