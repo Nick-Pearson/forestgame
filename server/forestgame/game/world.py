@@ -1,7 +1,8 @@
 
 
 class World:
-  def __init__(self, world_uuid, map_id, size_x, size_y, tile_data, building_data):
+  def __init__(self, db, world_uuid, map_id, size_x, size_y, tile_data, building_data):
+    self.db = db
     self.__world_uuid = world_uuid
     self.map_id = map_id
     self.__size_x = size_x
@@ -53,5 +54,26 @@ class World:
   def get_building_data(self):
     return self.__building_data
 
-  def insert_to_db(self, db, game_id):
-    pass
+  def insert_to_db(self):
+    self.db.execute("""
+      INSERT INTO world (uuid,
+                        map_id,
+                        size_x,
+                        size_y)
+                    VALUES (%s, %s, %s, %s)""",
+               (self.__world_uuid,
+                self.map_id,
+                self.__size_x,
+                self.__size_y))
+
+  def persist(self):
+    self.db.execute("""
+      UPDATE world SET map_id=%s,
+                        size_x=%s,
+                        size_y=%s
+                    WHERE uuid=%s""",
+               (self.map_id,
+                self.__size_x,
+                self.__size_y,
+                self.__world_uuid))
+

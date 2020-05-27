@@ -102,8 +102,6 @@ class Game:
     self._players = players
     self.max_players = max_players
     self.world_uuid = world_uuid
-    world = World(world_uuid, "0", 0, 0, [], [])
-    world.insert_to_db(self.db, self.game_id)
     self.invite_code = invite_code
     self.is_lobby = is_lobby
     self.is_archived = is_archived
@@ -128,25 +126,34 @@ class Game:
   def num_players(self):
     return len(self._players)
 
+  def get_world(self):
+    db_result = self.db.query("SELECT map_id, size_x, size_y FROM world WHERE uuid=%s", (self.world_uuid, ))
+    row = db_result[0]
+    return World(self.db, self.world_uuid, row[0], row[1], row[2], [], [])
+
   def init_from_map(self, map_inst, max_players):
-    self.world.set_size(map_inst.size_x, map_inst.size_y)
+    world = self.get_world()
+    world.set_size(map_inst.size_x, map_inst.size_y)
     self.max_players = max_players
 
     for i in range(0, max_players):
       player_start = map_inst.player_starts[i]
-      self.world.set_tile_at(player_start[0], player_start[1], 0)
-      self.world.set_building_at(player_start[0], player_start[1], 0, str(i))
+      world.set_tile_at(player_start[0], player_start[1], 0)
+      world.set_building_at(player_start[0], player_start[1], 0, str(i))
 
     for (x, y, tid) in map_inst.map_data:
-      self.world.set_tile_at(x, y, tid)
+      world.set_tile_at(x, y, tid)
 
     # Move into game mode class
     hill = map_inst.features["hill"]
-    self.world.set_tile_at(hill[0], hill[1], 0)
-    self.world.set_building_at(hill[0], hill[1], 2, None)
+    world.set_tile_at(hill[0], hill[1], 0)
+    world.set_building_at(hill[0], hill[1], 2, None)
 
-  def insert_to_db(self, db):
-    db.execute("""
+    world.persist()
+    self.persist()
+
+  def insert_to_db(self):
+    self.db.execute("""
       INSERT INTO game (uuid,
                         create_datetime,
                         host_uuid,
@@ -164,6 +171,17 @@ class Game:
                 self.is_archived,
                 self.max_players,
                 self.world_uuid))
+
+  def persist(self):
+    self.db.execute("""
+      UPDATE game SET is_lobby=%s,
+                  is_archived=%s,
+                  max_players=%s
+                  WHERE uuid=%s""",
+               (self.is_lobby,
+                self.is_archived,
+                self.max_players,
+                self.game_id))
 
 class GameRegistry:
   def __init__(self, db):
@@ -198,7 +216,10 @@ class GameRegistry:
     if game_id is None:
       game_id = str(uuid.uuid4())
 
-    game = Game(self.db, game_id, host, {}, 0, str(uuid.uuid4()), generate_invite_code(), True, False)
-    game.insert_to_db(self.db)
+    world_uuid = str(uuid.uuid4())
+    world = World(self.db, world_uuid, "0", 0, 0, [], [])
+    world.insert_to_db()
+    game = Game(self.db, game_id, host, {}, 0, world_uuid, generate_invite_code(), True, False)
+    game.insert_to_db()
     game.add_player(host)
     return game

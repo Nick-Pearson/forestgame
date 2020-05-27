@@ -20,7 +20,9 @@ class GameWorldTest(unittest.TestCase):
 
   def test_get_world_with_initialised_data(self):
     game = self.game_registry.create_game(CLIENT_ID, GAME_ID)
-    game.world.set_size(5, 5)
+    world = game.get_world()
+    world.set_size(5, 5)
+    world.persist()
 
     resp = self.handler.get_world(Request(CLIENT_ID, {"game_id": GAME_ID}))
 
@@ -45,7 +47,9 @@ class DeforestTest(unittest.TestCase):
 
   def test_deforest_removes_forest_for_that_tile_and_increments_player_wood(self):
     game = self.game_registry.create_game(CLIENT_ID, GAME_ID)
-    game.world.set_size(5, 5)
+    world = game.get_world()
+    world.set_size(5, 5)
+    world.persist()
 
     resp = self.handler.action_deforest(Request(CLIENT_ID, {"game_id": GAME_ID}, {"x": 0, "y": 0}))
 

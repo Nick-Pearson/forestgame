@@ -32,10 +32,11 @@ class GameHandler():
   def get_world(self, request):
     game_id = request.path["game_id"]
     game = self.lookup_game(game_id)
+    world = game.get_world()
 
     return {
-      "tileData": game.world.get_tile_data(),
-      "buildings": game.world.get_building_data(),
+      "tileData": world.get_tile_data(),
+      "buildings": world.get_building_data(),
     }
 
   def get_players(self, request):
@@ -59,6 +60,7 @@ class GameHandler():
   def get_game_data(self, request):
     game_id = request.path["game_id"]
     game = self.lookup_game(game_id)
+    world = game.get_world()
 
     return {
       "game_id": game.game_id,
@@ -66,7 +68,7 @@ class GameHandler():
       "state": "GAME",
       "max_players": game.max_players,
       "numPlayers": game.num_players(),
-      "map_id": game.map_id,
+      "map_id": world.map_id,
       "gameModeName": "King of the Hill",
     }
 
