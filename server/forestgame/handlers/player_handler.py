@@ -29,6 +29,7 @@ class PlayerHandler():
 
     player = self.lookup_player(game_id, request.client_id)
     player.name = new_name
+    player.persist()
     return {"name": new_name}
 
   def get_name(self, request):
@@ -43,9 +44,9 @@ class PlayerHandler():
     player = self.lookup_player(game_id, request.client_id)
 
     stats = {
-      "population": player.population,
-      "wood": player.wood,
-      "coin": player.coin,
-      "food": player.food
+      "population": player.stats.population,
+      "wood": player.stats.wood,
+      "coin": player.stats.coin,
+      "food": player.stats.food
     }
     return {"stats": stats}

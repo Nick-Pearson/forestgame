@@ -6,14 +6,10 @@ from forestgame.handlers.handler_exceptions import ResourceNotFoundException
 from forestgame.game_registry import GameRegistry
 from forestgame.request import Request
 
-from forestgame.database.sql_connections import InMemoryConnectionFactory
-from forestgame.database.sql_database import SQLDatabase
+from forestgame.database.sql_database import generate_test_db
 
 GAME_ID = "d01823a0-8667-41dc-a63f-0af11564fd87"
 CLIENT_ID = "21fd7079-c7d8-48a7-8663-db924724f98e"
-
-def generate_test_db():
-  return SQLDatabase(InMemoryConnectionFactory())
 
 class PlayerNameTest(unittest.TestCase):
   def setUp(self):
@@ -83,10 +79,9 @@ class PlayerNameTest(unittest.TestCase):
     self.assertEqual("New Name", get_resp["name"])
 
 class PlayerStatsTest(unittest.TestCase):
-  def __init__(self, methodName):
-    super(PlayerStatsTest, self).__init__(methodName)
-
-    self.game_registry = GameRegistry(generate_test_db())
+  def setUp(self):
+    self.db = generate_test_db()
+    self.game_registry = GameRegistry(self.db)
     self.handler = PlayerHandler(self.game_registry)
 
   def test_get_for_non_existant_game_returns_not_found(self):
@@ -106,10 +101,11 @@ class PlayerStatsTest(unittest.TestCase):
   def test_get_stats_returns_current_stats(self):
     game = self.game_registry.create_game(CLIENT_ID, GAME_ID)
     player = game.get_player_for_client_id(CLIENT_ID)
-    player.population = 10
-    player.wood = 20
-    player.coin = 30
-    player.food = 40
+    player.stats.population = 10
+    player.stats.wood = 20
+    player.stats.coin = 30
+    player.stats.food = 40
+    player.persist()
 
     get_resp = self.handler.get_player_stats(Request(CLIENT_ID, {"game_id": GAME_ID}))
 

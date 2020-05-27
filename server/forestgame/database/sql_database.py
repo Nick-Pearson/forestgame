@@ -1,6 +1,8 @@
 from os import path
 import time
 
+from forestgame.database.sql_connections import InMemoryConnectionFactory
+
 class SQLDatabase:
   def __init__(self, connectionfactory):
     self.connectionfactory = connectionfactory
@@ -70,10 +72,20 @@ class SQLDatabase:
     conn = self.connectionfactory.get_conn()
     conn.execute(sql, params)
     conn.close()
-  
+
   def query(self, sql, params=()):
     conn = self.connectionfactory.get_conn()
     result = conn.query(sql, params)
     conn.close()
     return result
 
+# Helper method for creating a database for tests
+def generate_test_db():
+  factory = InMemoryConnectionFactory()
+  conn = factory.get_conn()
+  tables = conn.query("SELECT name FROM sqlite_master WHERE type='table'")
+  for table in tables:
+    conn.execute("DROP TABLE IF EXISTS " + str(table[0]))
+  conn.close()
+
+  return SQLDatabase(factory)

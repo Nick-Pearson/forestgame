@@ -20,7 +20,7 @@ CREATE TABLE client (
 
 CREATE TABLE world (
   uuid CHAR(36) NOT NULL,
-  map_id VARCHAR(8) NOT NULL,
+  map_id VARCHAR(8) NULL,
   size_x INT NOT NULL,
   size_y INT NOT NULL,
   PRIMARY KEY (uuid)

@@ -1,11 +1,13 @@
 
 
 class World:
-  def __init__(self):
-    self.__tile_data = []
-    self.__building_data = []
-    self.__size_x = 0
-    self.__size_y = 0
+  def __init__(self, world_uuid, map_id, size_x, size_y, tile_data, building_data):
+    self.__world_uuid = world_uuid
+    self.map_id = map_id
+    self.__size_x = size_x
+    self.__size_y = size_y
+    self.__tile_data = tile_data
+    self.__building_data = building_data
 
   def set_size(self, x, y):
     if y > self.__size_y:
@@ -50,3 +52,6 @@ class World:
 
   def get_building_data(self):
     return self.__building_data
+
+  def insert_to_db(self, db, game_id):
+    pass

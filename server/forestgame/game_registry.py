@@ -23,15 +23,17 @@ class Stats:
       self.food -= amount["food"]
 
 class Player:
-  def __init__(self, client_id, player_id, colour, name, stats):
+  def __init__(self, db, game_id, client_id, player_id, colour, name, stats):
+    self.db = db
+    self.game_id = game_id
     self.client_id = client_id
     self.player_id = player_id
     self.colour = colour
     self.name = name
     self.stats = stats
 
-  def insert_to_db(self, db, game_id):
-    db.execute("""
+  def insert_to_db(self):
+    self.db.execute("""
       INSERT INTO game_player (game_uuid,
                                 client_uuid,
                                 player_idx,
@@ -44,7 +46,7 @@ class Player:
                                 coin,
                                 food)
                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)""",
-               (game_id,
+               (self.game_id,
                 self.client_id,
                 self.player_id,
                 self.name,
@@ -55,6 +57,29 @@ class Player:
                 self.stats.wood,
                 self.stats.coin,
                 self.stats.food))
+
+  def persist(self):
+    self.db.execute("""
+      UPDATE game_player SET name=%s,
+                          colour_r=%s,
+                          colour_g=%s,
+                          colour_b=%s,
+                          population=%s,
+                          wood=%s,
+                          coin=%s,
+                          food=%s
+                    WHERE game_uuid=%s AND client_uuid=%s AND player_idx=%s""",
+               (self.name,
+                self.colour[0],
+                self.colour[1],
+                self.colour[2],
+                self.stats.population,
+                self.stats.wood,
+                self.stats.coin,
+                self.stats.food,
+                self.game_id,
+                self.client_id,
+                self.player_id))
 
 startingColours = [
   (204, 0, 0), # red
@@ -77,6 +102,8 @@ class Game:
     self._players = players
     self.max_players = max_players
     self.world_uuid = world_uuid
+    world = World(world_uuid, "0", 0, 0, [], [])
+    world.insert_to_db(self.db, self.game_id)
     self.invite_code = invite_code
     self.is_lobby = is_lobby
     self.is_archived = is_archived
@@ -87,8 +114,8 @@ class Game:
 
     player_idx = len(self._players)
     colour = startingColours[player_idx % len(startingColours)]
-    player = Player(client_id, player_idx, colour, "Player " + str(player_idx), Stats(30, 0, 0, 60))
-    player.insert_to_db(self.db, self.game_id)
+    player = Player(self.db, self.game_id, client_id, player_idx, colour, "Player " + str(player_idx), Stats(30, 0, 0, 60))
+    player.insert_to_db()
     self._players[client_id] = player
     return player
 
@@ -157,7 +184,7 @@ class GameRegistry:
       colour = (player_row[3], player_row[4], player_row[5])
       stats = Stats(player_row[6], player_row[7], player_row[8], player_row[9])
 
-      players[client_uuid] = Player(client_uuid, player_row[1], colour, player_row[2], stats)
+      players[client_uuid] = Player(self.db, game_id, client_uuid, player_row[1], colour, player_row[2], stats)
 
     return Game(self.db, game_id, str(row[1]), players, int(row[2]), str(row[3]), str(row[4]), bool(row[5]), bool(row[6]))
 

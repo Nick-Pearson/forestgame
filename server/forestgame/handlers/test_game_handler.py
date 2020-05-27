@@ -5,14 +5,10 @@ from forestgame.game_registry import GameRegistry
 from forestgame.request import Request
 from forestgame.data.map_data import Map
 
-from forestgame.database.sql_connections import InMemoryConnectionFactory
-from forestgame.database.sql_database import SQLDatabase
+from forestgame.database.sql_database import generate_test_db
 
 GAME_ID = "9ced424f-91c2-47b2-a8ea-6a4bb38f2d2b"
 CLIENT_ID = "6fb8d67c-fee3-437d-9d08-05c27d8a9d15"
-
-def generate_test_db():
-  return SQLDatabase(InMemoryConnectionFactory())
 
 class GameWorldTest(unittest.TestCase):
   def setUp(self):
@@ -36,7 +32,6 @@ class GameWorldTest(unittest.TestCase):
       [1, 1, 1, 1, 1],
     ]
     self.assertEqual(expected_tiles, resp["tileData"])
-
 
 class DeforestTest(unittest.TestCase):
   def setUp(self):
@@ -133,10 +128,16 @@ class GetPlayersTest(unittest.TestCase):
     game = self.game_registry.create_game(CLIENT_ID, GAME_ID)
     player = game.get_player_for_client_id(CLIENT_ID)
     player.colour = (255, 0, 0)
-    game.world.set_size(5, 5)
-    game.add_player("6fb8d67c-fee3-437d-9d08-05c27d8a9d16").colour = (0, 255, 0)
-    game.add_player("6fb8d67c-fee3-437d-9d08-05c27d8a9d17").colour = (0, 0, 255)
-    game.add_player("6fb8d67c-fee3-437d-9d08-05c27d8a9d18").colour = (255, 255, 0)
+    player.persist()
+    player = game.add_player("6fb8d67c-fee3-437d-9d08-05c27d8a9d16")
+    player.colour = (0, 255, 0)
+    player.persist()
+    player = game.add_player("6fb8d67c-fee3-437d-9d08-05c27d8a9d17")
+    player.colour = (0, 0, 255)
+    player.persist()
+    player = game.add_player("6fb8d67c-fee3-437d-9d08-05c27d8a9d18")
+    player.colour = (255, 255, 0)
+    player.persist()
 
     resp = self.handler.get_players(Request(CLIENT_ID, {"game_id": GAME_ID}))
 
@@ -196,4 +197,3 @@ class JoinGameTest(unittest.TestCase):
     resp = self.handler.join_game(Request("6fb8d67c-fee3-437d-9d08-05c27d8a9d16", {"invite_code": game.invite_code}))
 
     self.assertEqual(game.game_id, resp["game_id"])
-    self.assertEqual(2, game.num_players())

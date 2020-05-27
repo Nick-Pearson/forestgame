@@ -18,8 +18,7 @@ class GameHandler():
   def create_game(self, request):
     game = self.game_regsitry.create_game(request.client_id)
     map_inst = get_map_for_id(request.body["map_id"])
-    # TODO: Move this logic into the world class
-    # game.init_from_map(map_inst, int(request.body["max_players"]))
+    game.init_from_map(map_inst, int(request.body["max_players"]))
     return {"game_id": game.game_id}
 
   def join_game(self, request):
