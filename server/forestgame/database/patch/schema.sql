@@ -57,7 +57,7 @@ CREATE TABLE game (
   is_lobby BOOLEAN NOT NULL,
   is_archived BOOLEAN NOT NULL,
   max_players INT NOT NULL,
-  world_uuid INT NOT NULL,
+  world_uuid CHAR(36) NOT NULL,
   FOREIGN KEY (host_uuid) REFERENCES client(uuid),
   FOREIGN KEY (world_uuid) REFERENCES world(uuid),
   PRIMARY KEY (uuid)
