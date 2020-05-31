@@ -36,7 +36,7 @@ class GameHandler():
 
     return {
       "tileData": world.get_tile_data(),
-      "buildings": world.get_building_data(),
+      "buildings": [{'id': b["id"], 'owner_id': b["owner_id"], 'x': b["x"], 'y': b["y"]} for b in world.get_building_data()],
     }
 
   def get_players(self, request):

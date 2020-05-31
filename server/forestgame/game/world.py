@@ -1,7 +1,7 @@
 
 
 class World:
-  def __init__(self, db, world_uuid, map_id, size_x, size_y, tile_data, building_data):
+  def __init__(self, db, world_uuid, map_id, size_x, size_y, tile_changes, building_data):
     self.db = db
     self.__world_uuid = world_uuid
     self.map_id = map_id
@@ -12,9 +12,10 @@ class World:
     self.__building_data = building_data
     self.set_size(size_x, size_y)
 
-    for tile in tile_data:
+    for tile in tile_changes:
       self.__tile_data[tile[1]][tile[0]] = tile[2]
     
+
   def set_size(self, x, y):
     if y > self.__size_y:
       diff = y - self.__size_y
@@ -50,6 +51,7 @@ class World:
 
   def set_building_at(self, x, y, building_id, owner_id):
     self.__building_data.append({
+      "in_db": False,
       "x": x,
       "y": y,
       "id": building_id,
@@ -90,7 +92,10 @@ class World:
                      self.__size_x,
                      self.__size_y,
                      self.__world_uuid))
+    self.__persist_tiles()
+    self.__persist_buildings()
 
+  def __persist_tiles(self):
     for change in self.__tile_changes:
       exists = change[0]
       x = change[1]
@@ -112,3 +117,16 @@ class World:
                          x,
                          y,
                          self.__tile_data[y][y]))
+  
+  def __persist_buildings(self):
+    for building in self.__building_data:
+      if not building["in_db"]:
+        self.db.execute("""
+          INSERT INTO world_building (world_uuid, x, y, building_id, owner_id) 
+                            VALUES (%s, %s, %s, %s, %s)""",
+                        (self.__world_uuid,
+                         building["x"],
+                         building["y"],
+                         building["id"],
+                         building["owner_id"]))
+        building["in_db"] = True

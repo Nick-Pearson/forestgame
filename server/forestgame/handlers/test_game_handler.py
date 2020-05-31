@@ -104,6 +104,10 @@ class BuildTest(unittest.TestCase):
       [1, 1, 1, 1, 1],
     ]
     self.assertEqual(expected_tiles, resp["tileData"])
+    expected_buildings = [
+      {"x": 0, "y": 0, "id": 1, "owner_id": "0"}
+    ]
+    self.assertEqual(expected_buildings, resp["buildings"])
 
 
 class CreateGameTest(unittest.TestCase):

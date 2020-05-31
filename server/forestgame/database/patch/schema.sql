@@ -38,6 +38,17 @@ CREATE TABLE world_tile (
 CREATE INDEX world_tile_x_idx ON world_tile (x);
 CREATE INDEX world_tile_y_idx ON world_tile (y);
 
+CREATE TABLE world_building (
+  id SERIAL,
+  world_uuid  CHAR(36) NOT NULL,
+  x INT NOT NULL,
+  y INT NOT NULL,
+  building_id INT NOT NULL,
+  owner_id VARCHAR(8) NULL,
+  FOREIGN KEY (world_uuid) REFERENCES world(uuid),
+  PRIMARY KEY (id)
+);
+
 CREATE TABLE game (
   uuid CHAR(36) NOT NULL,
   create_datetime BIGINT NOT NULL,
