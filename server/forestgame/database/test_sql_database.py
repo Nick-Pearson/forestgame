@@ -56,4 +56,4 @@ class MigrateDatabaseTest(unittest.TestCase):
   def get_postgres_dump(self):
     out = subprocess.Popen(['pg_dump', '-s', 'forest_integration_test'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     stdout = out.communicate()[0]
-    return stdout
+    return str(stdout)
