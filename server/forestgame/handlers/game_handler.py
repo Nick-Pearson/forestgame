@@ -77,10 +77,13 @@ class GameHandler():
     coords = request.body
     game = self.lookup_game(game_id)
 
-    game.world.set_tile_at(coords["x"], coords["y"], 2)
+    world = game.get_world()
+    world.set_tile_at(coords["x"], coords["y"], 2)
+    world.persist()
 
     player = game.get_player_for_client_id(request.client_id)
-    player.wood += 10
+    player.stats.wood += 10
+    player.persist()
 
     return {}
 
@@ -94,7 +97,10 @@ class GameHandler():
     game = self.lookup_game(game_id)
 
     player = game.get_player_for_client_id(request.client_id)
-    player.spend(building["cost"])
-    game.world.set_building_at(x, y, building_id, player.player_id)
-    game.world.set_tile_at(x, y, 0)
+    player.stats.spend(building["cost"])
+    player.persist()
+    world = game.get_world()
+    world.set_building_at(x, y, building_id, player.player_id)
+    world.set_tile_at(x, y, 0)
+    world.persist()
     return {}

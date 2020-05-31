@@ -5,11 +5,16 @@ class World:
     self.db = db
     self.__world_uuid = world_uuid
     self.map_id = map_id
-    self.__size_x = size_x
-    self.__size_y = size_y
-    self.__tile_data = tile_data
+    self.__size_x = 0
+    self.__size_y = 0
+    self.__tile_data = []
+    self.__tile_changes = []
     self.__building_data = building_data
+    self.set_size(size_x, size_y)
 
+    for tile in tile_data:
+      self.__tile_data[tile[1]][tile[0]] = tile[2]
+    
   def set_size(self, x, y):
     if y > self.__size_y:
       diff = y - self.__size_y
@@ -29,7 +34,16 @@ class World:
     self.__size_y = y
 
   def set_tile_at(self, x, y, tile_id):
+    old = self.__tile_data[y][x]
+    if tile_id == old:
+      return
+
     self.__tile_data[y][x] = tile_id
+
+    if old == 1:
+      self.__tile_changes.append((False, x, y))
+    else:
+      self.__tile_changes.append((True, x, y))
 
   def get_tile_at(self, x, y):
     return self.__tile_data[y][x]
@@ -61,10 +75,10 @@ class World:
                         size_x,
                         size_y)
                     VALUES (%s, %s, %s, %s)""",
-               (self.__world_uuid,
-                self.map_id,
-                self.__size_x,
-                self.__size_y))
+                    (self.__world_uuid,
+                     self.map_id,
+                     self.__size_x,
+                     self.__size_y))
 
   def persist(self):
     self.db.execute("""
@@ -72,8 +86,29 @@ class World:
                         size_x=%s,
                         size_y=%s
                     WHERE uuid=%s""",
-               (self.map_id,
-                self.__size_x,
-                self.__size_y,
-                self.__world_uuid))
+                    (self.map_id,
+                     self.__size_x,
+                     self.__size_y,
+                     self.__world_uuid))
 
+    for change in self.__tile_changes:
+      exists = change[0]
+      x = change[1]
+      y = change[2]
+
+      if exists:
+        self.db.execute("""
+          UPDATE world_tile SET tile_id=%s 
+                            WHERE world_uuid=%s AND x=%s AND y=%s""",
+                        (self.__tile_data[y][y],
+                         self.__world_uuid,
+                         x,
+                         y))
+      else:
+        self.db.execute("""
+          INSERT INTO world_tile (world_uuid, x, y, tile_id) 
+                            VALUES (%s, %s, %s, %s)""",
+                        (self.__world_uuid,
+                         x,
+                         y,
+                         self.__tile_data[y][y]))

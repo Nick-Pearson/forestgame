@@ -128,8 +128,9 @@ class Game:
 
   def get_world(self):
     db_result = self.db.query("SELECT map_id, size_x, size_y FROM world WHERE uuid=%s", (self.world_uuid, ))
+    tile_db_results = self.db.query("SELECT x, y, tile_id FROM world_tile WHERE world_uuid=%s", (self.world_uuid, ))
     row = db_result[0]
-    return World(self.db, self.world_uuid, row[0], row[1], row[2], [], [])
+    return World(self.db, self.world_uuid, row[0], row[1], row[2], tile_db_results, [])
 
   def init_from_map(self, map_inst, max_players):
     world = self.get_world()

@@ -10,6 +10,17 @@ class WorldTest(unittest.TestCase):
     self.assertEqual(0, world.get_size_y())
     self.assertEqual([], world.get_tile_data())
 
+  def test_world_with_tiles_inits__with_tiles_to_empty_data(self):
+    world = World(None, "1", "0", 3, 3, [(1, 1, 0)], [])
+
+    expected_tile_data = [
+      [1, 1, 1],
+      [1, 0, 1],
+      [1, 1, 1],
+    ]
+    self.assertEqual(expected_tile_data, world.get_tile_data())
+    self.assertEqual(3, world.get_size_x())
+    self.assertEqual(3, world.get_size_y())
   def test_set_size_from_zero_initialsies_from_forest(self):
     world = World(None, "1", "0", 0, 0, [], [])
 

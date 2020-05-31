@@ -26,6 +26,18 @@ CREATE TABLE world (
   PRIMARY KEY (uuid)
 );
 
+CREATE TABLE world_tile (
+  id SERIAL,
+  world_uuid  CHAR(36) NOT NULL,
+  x INT NOT NULL,
+  y INT NOT NULL,
+  tile_id INT NOT NULL,
+  FOREIGN KEY (world_uuid) REFERENCES world(uuid),
+  PRIMARY KEY (id)
+);
+CREATE INDEX world_tile_x_idx ON world_tile (x);
+CREATE INDEX world_tile_y_idx ON world_tile (y);
+
 CREATE TABLE game (
   uuid CHAR(36) NOT NULL,
   create_datetime BIGINT NOT NULL,

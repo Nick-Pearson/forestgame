@@ -54,8 +54,9 @@ class DeforestTest(unittest.TestCase):
     resp = self.handler.action_deforest(Request(CLIENT_ID, {"game_id": GAME_ID}, {"x": 0, "y": 0}))
 
     self.assertEqual(resp, {})
+    game = self.game_registry.get_game_for_id(GAME_ID)
     player = game.get_player_for_client_id(CLIENT_ID)
-    self.assertEqual(10, player.wood)
+    self.assertEqual(10, player.stats.wood)
     resp = self.handler.get_world(Request(CLIENT_ID, {"game_id": GAME_ID}))
     expected_tiles = [
       [2, 1, 1, 1, 1],
@@ -80,16 +81,20 @@ class BuildTest(unittest.TestCase):
 
   def test_build_removes_clearing_for_that_tile_and_sets_building_and_decrements_player_resource(self):
     game = self.game_registry.create_game(CLIENT_ID, GAME_ID)
-    game.world.set_size(5, 5)
-    game.world.set_tile_at(0, 0, 2)
+    world = game.get_world()
+    world.set_size(5, 5)
+    world.set_tile_at(0, 0, 2)
+    world.persist()
     player = game.get_player_for_client_id(CLIENT_ID)
-    player.wood = 40
+    player.stats.wood = 40
+    player.persist()
 
     resp = self.handler.action_build(Request(CLIENT_ID, {"game_id": GAME_ID}, {"x": 0, "y": 0, "building_id": 1}))
 
     self.assertEqual(resp, {})
+    game = self.game_registry.get_game_for_id(GAME_ID)
     player = game.get_player_for_client_id(CLIENT_ID)
-    self.assertEqual(20, player.wood)
+    self.assertEqual(20, player.stats.wood)
     resp = self.handler.get_world(Request(CLIENT_ID, {"game_id": GAME_ID}))
     expected_tiles = [
       [0, 1, 1, 1, 1],
