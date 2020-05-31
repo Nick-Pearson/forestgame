@@ -51,7 +51,7 @@ class MigrateDatabaseTest(unittest.TestCase):
     conn.execute("DROP SCHEMA public CASCADE; CREATE SCHEMA public;")
     SQLDatabase(connection_factory)
     expected = self.get_postgres_dump()
-    self.assertEqual(expected, dump)
+    self.assertMultiLineEqual(expected, dump)
 
   def get_postgres_dump(self):
     out = subprocess.Popen(['pg_dump', '-s', 'forest_integration_test'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
