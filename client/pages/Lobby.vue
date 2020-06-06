@@ -2,7 +2,7 @@
   <MenuWrapper>
     <div class="invite-code">
       <p>Invite Code:</p>
-      <h1>{{gameData.inviteCode}}</h1>
+      <h1>{{gameData.invite_code}}</h1>
     </div>
 
     <div class="row">
@@ -27,15 +27,15 @@
           </tr>
           <tr>
             <td>Players:</td>
-            <td>{{gameData.numPlayers}} / {{gameData.maxPlayers}}</td>
+            <td>{{gameData.num_players}} / {{gameData.max_players}}</td>
           </tr>
           <tr>
             <td>Game Mode:</td>
-            <td>{{gameData.gameModeName}}l</td>
+            <td>{{gameData.game_mode_name}}l</td>
           </tr>
         </table>
 
-        <MapThumbnail v-bind:mapId="gameData.mapId" v-bind:maxPlayers="gameData.maxPlayers"/>
+        <MapThumbnail v-bind:mapId="gameData.map_id" v-bind:maxPlayers="gameData.max_players"/>
       </div>
     </div>
 
@@ -158,7 +158,7 @@ const model = {
 
 function loadMapData()
 {
-  restRequest({method: "GET", path: "/maps/" + model.gameData.mapId }, (response) => {
+  restRequest({method: "GET", path: "/maps/" + model.gameData.map_id }, (response) => {
     if (response.status === 200)
     {
       model.mapData = response.body;
@@ -196,7 +196,7 @@ function poll()
     if (response.status === 200)
     {
       model.gameData = response.body;
-      if (model.gameData.mapId !== model.mapData.id)
+      if (model.gameData.map_id !== model.mapData.id)
       {
         loadMapData();
       }

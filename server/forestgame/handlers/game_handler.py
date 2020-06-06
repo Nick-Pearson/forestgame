@@ -64,12 +64,12 @@ class GameHandler():
 
     return {
       "game_id": game.game_id,
-      "inviteCode": game.invite_code,
+      "invite_code": game.invite_code,
       "state": "GAME",
       "max_players": game.max_players,
-      "numPlayers": game.num_players(),
+      "num_players": game.num_players(),
       "map_id": world.map_id,
-      "gameModeName": "King of the Hill",
+      "game_mode_name": "King of the Hill",
     }
 
   def action_deforest(self, request):

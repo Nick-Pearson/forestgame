@@ -90,14 +90,14 @@ class World
       x: x,
       y: y,
       id: buildingId,
-      ownerId: playerId,
+      owner_id: playerId,
     };
     this.onworldupdate.broadcast();
 
     const req = {
       method: "POST",
       path: "/game/" + this.gameId + "/actions/build",
-      body: {x: x, y: y, buildingId: buildingId},
+      body: {x: x, y: y, building_id: buildingId},
     };
     restRequest(req, (resp) =>
     {

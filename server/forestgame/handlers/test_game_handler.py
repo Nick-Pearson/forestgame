@@ -186,9 +186,9 @@ class GameDataTest(unittest.TestCase):
 
     self.assertEqual(GAME_ID, resp["game_id"])
     self.assertEqual(4, resp["max_players"])
-    self.assertEqual(1, resp["numPlayers"])
+    self.assertEqual(1, resp["num_players"])
     self.assertEqual("0", resp["map_id"])
-    self.assertEqual("King of the Hill", resp["gameModeName"])
+    self.assertEqual("King of the Hill", resp["game_mode_name"])
 
 class JoinGameTest(unittest.TestCase):
   def setUp(self):

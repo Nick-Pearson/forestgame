@@ -105,7 +105,7 @@ class World:
         self.db.execute("""
           UPDATE world_tile SET tile_id=%s 
                             WHERE world_uuid=%s AND x=%s AND y=%s""",
-                        (self.__tile_data[y][y],
+                        (self.__tile_data[y][x],
                          self.__world_uuid,
                          x,
                          y))
@@ -116,7 +116,7 @@ class World:
                         (self.__world_uuid,
                          x,
                          y,
-                         self.__tile_data[y][y]))
+                         self.__tile_data[y][x]))
   
   def __persist_buildings(self):
     for building in self.__building_data:

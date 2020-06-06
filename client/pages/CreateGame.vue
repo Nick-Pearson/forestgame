@@ -11,14 +11,14 @@
         <div class="select-wrapper">
           <label for="maps">Map:</label>
           <select id="maps" v-model="selectedMapVal">
-            <option v-for="map in maps" :key="map.id" :value="map.id">{{map.name}} (2-{{map.maxPlayers}} Players)</option>
+            <option v-for="map in maps" :key="map.id" :value="map.id">{{map.name}} (2-{{map.max_players}} Players)</option>
           </select>
         </div>
         
         <div class="select-wrapper">
           <label for="player-count">Max. Players:</label>
           <select id="player-count" v-model="selectedMaxPlayers">
-            <option v-for="i in (selectedMap.maxPlayers - 1)" :key="i" :value="i + 1">{{i + 1}}</option>
+            <option v-for="i in (selectedMap.max_players - 1)" :key="i" :value="i + 1">{{i + 1}}</option>
           </select>
         </div>
 
@@ -82,8 +82,8 @@ function createGame(e)
 
   model.creating = true;
   const body = {
-    "mapId": this.selectedMapVal,
-    "maxPlayers": this.selectedMaxPlayers
+    "map_id": this.selectedMapVal,
+    "max_players": this.selectedMaxPlayers
   }
   restRequest({method: "POST", path: "/game", body: body}, (response) => {
     model.creating = false;
@@ -139,10 +139,6 @@ export default
     MapThumbnail
   },
   computed: {
-    mapThumbnailUrl: function() {
-      this.onThumbStartLoad();
-      return "/api/maps/" + this.selectedMapVal + "/thumbnail?maxPlayers=" + this.selectedMaxPlayers
-    },
     selectedMap: function() 
     {
       return this .maps.find((map) => {

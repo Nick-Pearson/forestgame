@@ -75,9 +75,9 @@ class WorldRenderer
   drawBuilding(x, y, building)
   {
     this.context.drawImage(this.buildingIdToSprite[building.id], x, y);
-    if (building.ownerId !== null)
+    if (building.owner_id !== null)
     {
-      this.context.fillStyle = this.game.playerData.getColourForPlayer(building.ownerId);
+      this.context.fillStyle = this.game.playerData.getColourForPlayer(building.owner_id);
 
       const metaData = buildingMetadata[building.id];
       if (metaData.teamColour !== undefined)

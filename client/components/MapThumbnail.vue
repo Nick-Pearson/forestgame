@@ -59,7 +59,7 @@ export default
       let url = "/api/maps/" + this.mapId + "/thumbnail";
       if (this.maxPlayers !== undefined)
       {
-        url += "?maxPlayers=" + this.maxPlayers
+        url += "?max_players=" + this.maxPlayers
       }
       return url;
     }

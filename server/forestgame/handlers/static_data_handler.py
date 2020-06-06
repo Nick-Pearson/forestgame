@@ -19,7 +19,7 @@ def generate_thumbnail_for_map(map_instance, max_players):
     coords = map_instance.features[k]
     pixels[coords[0], coords[1]] = (255, 0, 0)
 
-  for (x, y) in map_instance.map_data:
+  for (x, y, tile_id) in map_instance.map_data:
     pixels[x, y] = (0, 0, 0)
 
   return img
