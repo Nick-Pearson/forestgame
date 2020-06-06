@@ -51,9 +51,9 @@ CREATE TABLE world_building (
 
 CREATE TABLE game (
   uuid CHAR(36) NOT NULL,
-  create_datetime BIGINT NOT NULL,
   host_uuid CHAR(36) NOT NULL,
   invite_code CHAR(4) NOT NULL,
+  create_datetime BIGINT NOT NULL,
   is_lobby BOOLEAN NOT NULL,
   is_archived BOOLEAN NOT NULL,
   max_players INT NOT NULL,
