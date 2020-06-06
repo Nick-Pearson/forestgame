@@ -60,7 +60,7 @@ class SQLDatabase:
     conn.close()
 
   def get_latest_patch(self):
-    return 1
+    return 2
 
   def record_db_patch(self, patch_id):
     timestamp = int(time.time())
