@@ -14,7 +14,6 @@ class World:
 
     for tile in tile_changes:
       self.__tile_data[tile[1]][tile[0]] = tile[2]
-    
 
   def set_size(self, x, y):
     if y > self.__size_y:
@@ -117,7 +116,7 @@ class World:
                          x,
                          y,
                          self.__tile_data[y][x]))
-  
+
   def __persist_buildings(self):
     for building in self.__building_data:
       if not building["in_db"]:

@@ -46,17 +46,17 @@ class Player:
                                 coin,
                                 food)
                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)""",
-               (self.game_id,
-                self.client_id,
-                self.player_id,
-                self.name,
-                self.colour[0],
-                self.colour[1],
-                self.colour[2],
-                self.stats.population,
-                self.stats.wood,
-                self.stats.coin,
-                self.stats.food))
+                    (self.game_id,
+                     self.client_id,
+                     self.player_id,
+                     self.name,
+                     self.colour[0],
+                     self.colour[1],
+                     self.colour[2],
+                     self.stats.population,
+                     self.stats.wood,
+                     self.stats.coin,
+                     self.stats.food))
 
   def persist(self):
     self.db.execute("""
@@ -69,17 +69,17 @@ class Player:
                           coin=%s,
                           food=%s
                     WHERE game_uuid=%s AND client_uuid=%s AND player_idx=%s""",
-               (self.name,
-                self.colour[0],
-                self.colour[1],
-                self.colour[2],
-                self.stats.population,
-                self.stats.wood,
-                self.stats.coin,
-                self.stats.food,
-                self.game_id,
-                self.client_id,
-                self.player_id))
+                    (self.name,
+                     self.colour[0],
+                     self.colour[1],
+                     self.colour[2],
+                     self.stats.population,
+                     self.stats.wood,
+                     self.stats.coin,
+                     self.stats.food,
+                     self.game_id,
+                     self.client_id,
+                     self.player_id))
 
 startingColours = [
   (204, 0, 0), # red
@@ -167,14 +167,14 @@ class Game:
                         max_players,
                         world_uuid)
                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s)""",
-               (self.game_id,
-                int(time.time()),
-                self.host,
-                self.invite_code,
-                self.is_lobby,
-                self.is_archived,
-                self.max_players,
-                self.world_uuid))
+                    (self.game_id,
+                     int(time.time()),
+                     self.host,
+                     self.invite_code,
+                     self.is_lobby,
+                     self.is_archived,
+                     self.max_players,
+                     self.world_uuid))
 
   def persist(self):
     self.db.execute("""
@@ -182,10 +182,10 @@ class Game:
                   is_archived=%s,
                   max_players=%s
                   WHERE uuid=%s""",
-               (self.is_lobby,
-                self.is_archived,
-                self.max_players,
-                self.game_id))
+                    (self.is_lobby,
+                     self.is_archived,
+                     self.max_players,
+                     self.game_id))
 
 class GameRegistry:
   def __init__(self, db):

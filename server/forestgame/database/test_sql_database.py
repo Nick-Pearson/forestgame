@@ -51,6 +51,7 @@ class MigrateDatabaseTest(unittest.TestCase):
     conn.execute("DROP SCHEMA public CASCADE; CREATE SCHEMA public;")
     SQLDatabase(connection_factory)
     expected = self.get_postgres_dump()
+    # pylint: disable=invalid-name
     self.maxDiff = 100000
     self.assertMultiLineEqual(expected, dump)
 
