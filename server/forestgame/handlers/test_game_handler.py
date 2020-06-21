@@ -240,7 +240,6 @@ class BuildTest(unittest.TestCase):
     ]
     self.assertEqual(expected_buildings, resp["buildings"])
 
-
 class CreateGameTest(unittest.TestCase):
   def setUp(self):
     self.game_registry = GameRegistry(generate_test_db())

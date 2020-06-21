@@ -3,6 +3,7 @@ from io import BytesIO
 from flask import send_file
 from PIL import Image
 
+from forestgame.handlers.handler_exceptions import ResourceNotFoundException
 from forestgame.data.building_data import BUILDINGS
 from forestgame.data.map_data import MAPS, get_map_for_id
 
@@ -33,8 +34,11 @@ class StaticDataHandler():
     return {"maps": maps}
 
   def get_map_thumbnail(self, request):
-    map_instanced = request.path["map_id"]
-    map_instance = get_map_for_id(map_instanced)
+    map_id = request.path["map_id"]
+    map_instance = get_map_for_id(map_id)
+    if map_instance is None:
+      raise ResourceNotFoundException("Map not found")
+    
     max_players = int(request.query.get("max_players", "2"))
     image = generate_thumbnail_for_map(map_instance, max_players)
 
@@ -45,6 +49,9 @@ class StaticDataHandler():
     return send_file(output, mimetype='image/png')
 
   def get_map(self, request):
-    map_instanced = request.path["map_id"]
-    map_inst = get_map_for_id(map_instanced)
-    return {"name": map_inst.name, "id": map_inst.map_id, "max_players": map_inst.max_players}
+    map_id = request.path["map_id"]
+    map_instance = get_map_for_id(map_id)
+    if map_instance is None:
+      raise ResourceNotFoundException("Map not found")
+
+    return {"name": map_instance.name, "id": map_instance.map_id, "max_players": map_instance.max_players}
