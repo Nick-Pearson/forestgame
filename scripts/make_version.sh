@@ -23,3 +23,4 @@ echo "\n"
 git commit --allow-empty -m "Prepare version ${version}"
 echo "Tagging commit v${version}"
 git tag -a v${version} -m "Version ${version}"
+git push --tags

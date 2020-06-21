@@ -22,6 +22,18 @@ class Stats:
     if "food" in amount:
       self.food -= amount["food"]
 
+  def has_enough(self, amount):
+    if amount is None:
+      return True
+    elif "wood" in amount and self.wood < amount["wood"]:
+      return False
+    elif "coin" in amount and self.coin < amount["coin"]:
+      return False
+    elif "food" in amount and self.food < amount["food"]:
+      return False
+
+    return True
+
 class Player:
   def __init__(self, db, game_id, client_id, player_id, colour, name, stats):
     self.db = db
