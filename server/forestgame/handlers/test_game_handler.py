@@ -6,6 +6,7 @@ from forestgame.request import Request
 from forestgame.data.map_data import Map
 from forestgame.handlers.handler_exceptions import ResourceNotFoundException
 from forestgame.handlers.handler_exceptions import BadRequestException
+from forestgame.handlers.handler_exceptions import ForbiddenException
 
 from forestgame.database.sql_database import generate_test_db
 
@@ -449,3 +450,61 @@ class JoinGameTest(unittest.TestCase):
     resp = self.handler.join_game(Request(CLIENT_ID_2, {"invite_code": game.invite_code}, {"name": "n00bmaster69"}))
 
     self.assertEqual(game.game_id, resp["game_id"])
+
+class StartGameTest(unittest.TestCase):
+  def setUp(self):
+    self.game_registry = GameRegistry(generate_test_db())
+    self.handler = GameHandler(self.game_registry)
+
+  def test_start_non_existant_game_returns_not_found(self):
+    with self.assertRaises(ResourceNotFoundException) as context:
+      self.handler.start_game(Request(CLIENT_ID, {"game_id": GAME_ID}))
+
+    self.assertEqual("Game not found", context.exception.message)
+  
+  def test_start_archived_game_returns_not_found(self):
+    game = self.game_registry.create_game(CLIENT_ID, GAME_ID)
+    game.is_archived = True
+    game.persist()
+
+    with self.assertRaises(ResourceNotFoundException) as context:
+      self.handler.start_game(Request(CLIENT_ID, {"game_id": GAME_ID}))
+
+    self.assertEqual("Game not found", context.exception.message)
+  
+  def test_start_game_player_not_part_of_returns_not_found(self):
+    self.game_registry.create_game(CLIENT_ID, GAME_ID)
+
+    with self.assertRaises(ResourceNotFoundException) as context:
+      self.handler.start_game(Request(CLIENT_ID_2, {"game_id": GAME_ID}))
+
+    self.assertEqual("Game not found", context.exception.message)
+  
+  def test_start_game_not_the_host_returns_forbidden(self):
+    game = self.game_registry.create_game(CLIENT_ID, GAME_ID)
+    game.add_player(CLIENT_ID_2)
+    game.persist()
+
+    with self.assertRaises(ForbiddenException) as context:
+      self.handler.start_game(Request(CLIENT_ID_2, {"game_id": GAME_ID}))
+
+    self.assertEqual("Only the host can start the game", context.exception.message)
+
+  def test_start_game_not_in_lobby_does_nothing(self):
+    game = self.game_registry.create_game(CLIENT_ID, GAME_ID)
+    game.is_lobby = False
+    game.persist()
+
+    resp = self.handler.start_game(Request(CLIENT_ID, {"game_id": GAME_ID}))
+
+    self.assertEqual({}, resp)
+
+  def test_start_game_by_host_sets_lobby_false_nothing(self):
+    self.game_registry.create_game(CLIENT_ID, GAME_ID)
+
+    resp = self.handler.start_game(Request(CLIENT_ID, {"game_id": GAME_ID}))
+
+    self.assertEqual({}, resp)
+    game = self.game_registry.get_game_for_id(GAME_ID)
+    self.assertFalse(game.is_lobby)
+    self.assertFalse(game.is_archived)

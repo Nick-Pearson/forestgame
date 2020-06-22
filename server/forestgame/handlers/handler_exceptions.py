@@ -12,3 +12,7 @@ class BadRequestException(HandlerException):
 class ResourceNotFoundException(HandlerException):
   def __init__(self, message):
     super(ResourceNotFoundException, self).__init__(404, message)
+
+class ForbiddenException(HandlerException):
+  def __init__(self, message):
+    super(ForbiddenException, self).__init__(403, message)

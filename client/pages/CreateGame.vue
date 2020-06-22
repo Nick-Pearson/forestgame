@@ -60,6 +60,7 @@ import MenuWrapper from '../components/MenuWrapper.vue'
 import ReturnHomeButton from '../components/ReturnHomeButton.vue'
 import Spinner from '../components/Spinner.vue'
 import MapThumbnail from '../components/MapThumbnail.vue'
+import ErrorBox from '../components/ErrorBox.vue'
 import {restRequest} from "../src/io.js"
 
 const model = {
@@ -83,7 +84,7 @@ function createGame(e)
   model.creating = true;
   const body = {
     "map_id": this.selectedMapVal,
-    "max_players": this.selectedMaxPlayers
+    "max_players": parseInt(this.selectedMaxPlayers)
   }
   restRequest({method: "POST", path: "/game", body: body}, (response) => {
     model.creating = false;
@@ -136,7 +137,8 @@ export default
     MenuWrapper,
     ReturnHomeButton,
     Spinner,
-    MapThumbnail
+    MapThumbnail,
+    ErrorBox
   },
   computed: {
     selectedMap: function() 

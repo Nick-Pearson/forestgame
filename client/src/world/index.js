@@ -30,6 +30,8 @@ class World
       this.sizeY = data.tileData.length;
       this.tileData = data.tileData;
 
+      // make this generate fewer arrays
+      this.buildings = [];
       for (let x = 0; x < this.sizeY; ++x)
       {
         this.buildings.push(new Array(this.getSizeX()).fill(null));

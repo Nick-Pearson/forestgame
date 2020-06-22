@@ -39,7 +39,8 @@
       </div>
     </div>
 
-    <button v-if="host" v-on:click="createGame($event)">
+    <ErrorBox v-bind:msg="errorMsg"/>
+    <button v-if="gameData.is_host" v-on:click="startGame($event)">
       Start Game
     </button>
     <p v-else>The host will start the game</p>
@@ -72,7 +73,7 @@
 
 .player-panel
 {
-  background-color: #EECCCC;
+  background-color: #AAAAAA;
   border: 1px solid #000000;
   display: flex;
 }
@@ -145,6 +146,7 @@ table td:nth-child(2)
 <script>
 import MenuWrapper from '../components/MenuWrapper.vue'
 import MapThumbnail from '../components/MapThumbnail.vue'
+import ErrorBox from '../components/ErrorBox.vue'
 import {restRequest} from "../src/io.js"
 
 const model = {
@@ -152,9 +154,28 @@ const model = {
   playerData: [],
   mapData: {},
   gameId: "",
-  errorMsg: "",
-  host: true
+  errorMsg: ""
 };
+
+function startGame(e)
+{
+  e.preventDefault();
+
+  restRequest({method: "POST", path: "/game/" + model.gameId + "/start" }, (response) => {
+    if (response.status === 200)
+    {
+      this.$router.push({name: "game", params: {gameId: model.gameId}});
+    }
+    else if (response.body != null && response.body.message !== undefined)
+    {
+      model.errorMsg = response.body.message;
+    }
+    else
+    {
+      model.errorMsg = "Unknown Error Occurred: HTTP " + response.status;
+    }
+  });
+}
 
 function loadMapData()
 {
@@ -196,7 +217,11 @@ function poll()
     if (response.status === 200)
     {
       model.gameData = response.body;
-      if (model.gameData.map_id !== model.mapData.id)
+      if (!model.gameData.is_lobby)
+      {
+        this.$router.push({name: "game", params: {gameId: model.gameId}});
+      }
+      else if (model.gameData.map_id !== model.mapData.id)
       {
         loadMapData();
       }
@@ -216,14 +241,19 @@ export default
 {
   name: 'Lobby',
   data: () => model,
+  methods: {
+    startGame: startGame,
+    poll: poll
+  },
   mounted: function() {
     model.gameId = this.$route.params.gameId;
-    setInterval(() => poll(), 4000);
-    poll();
+    setInterval(() => this.poll(), 4000);
+    this.poll();
   },
   components: {
     MenuWrapper,
-    MapThumbnail
+    MapThumbnail,
+    ErrorBox
   },
 }
 </script>

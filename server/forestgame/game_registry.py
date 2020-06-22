@@ -149,6 +149,7 @@ class Game:
 
   def init_from_map(self, map_inst, max_players):
     world = self.get_world()
+    world.map_id = map_inst.map_id
     world.set_size(map_inst.size_x, map_inst.size_y)
     self.max_players = max_players
 

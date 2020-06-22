@@ -1,6 +1,6 @@
 import json
 
-from flask import Flask, request, abort, send_file, send_from_directory
+from flask import Flask, request, abort, send_file, send_from_directory, make_response
 
 from forestgame.database.sql_database import SQLDatabase
 from forestgame.database.sql_connections import InMemoryConnectionFactory, PostgresConnectionFactory
@@ -118,7 +118,6 @@ def change_name(game_id):
   except HandlerException as e:
     return handle_exception(e)
 
-
 @app.route('/api/game/<game_id>/player-name', methods=["GET"])
 def get_name(game_id):
   try:
@@ -144,6 +143,13 @@ def get_players(game_id):
 def create_game():
   try:
     return gameHandler.create_game(build_request({}))
+  except HandlerException as e:
+    return handle_exception(e)
+
+@app.route('/api/game/<game_id>/start', methods=["POST"])
+def start_game(game_id):
+  try:
+    return gameHandler.start_game(build_request({"game_id": game_id}))
   except HandlerException as e:
     return handle_exception(e)
 

@@ -1,5 +1,6 @@
 from forestgame.handlers.handler_exceptions import ResourceNotFoundException
 from forestgame.handlers.handler_exceptions import BadRequestException
+from forestgame.handlers.handler_exceptions import ForbiddenException
 from forestgame.data.building_data import get_building_for_id
 from forestgame.data.map_data import get_map_for_id
 
@@ -115,6 +116,8 @@ class GameHandler():
       "num_players": game.num_players(),
       "map_id": world.map_id,
       "game_mode_name": "King of the Hill",
+      "is_host": game.host == request.client_id,
+      "is_lobby": game.is_lobby
     }
 
   def action_deforest(self, request):
@@ -178,4 +181,20 @@ class GameHandler():
     world.set_building_at(x, y, building_id, player.player_id)
     world.set_tile_at(x, y, 0)
     world.persist()
+    return {}
+
+  def start_game(self, request):
+    game_id = request.path["game_id"]
+    game = self.lookup_game(game_id)
+    if game.is_archived:
+      raise ResourceNotFoundException("Game not found")
+    player = game.get_player_for_client_id(request.client_id)
+    if player is None:
+      raise ResourceNotFoundException("Game not found")
+
+    if game.host != request.client_id:
+      raise ForbiddenException("Only the host can start the game")
+    
+    game.is_lobby = False
+    game.persist()
     return {}
