@@ -4,7 +4,6 @@ import psycopg2
 
 class InMemoryConnection:
   def __init__(self):
-    print("Connecting to in-memory database")
     self.conn = sqlite3.connect("file::memory:?cache=shared", uri=True)
 
   def table_exists(self, table):
@@ -30,6 +29,7 @@ class InMemoryConnection:
 class InMemoryConnectionFactory:
   def __init__(self):
     # keep a persistent connection open
+    print("Setting up in-memory database")
     self.__conn = InMemoryConnection()
 
   def get_conn(self):

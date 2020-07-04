@@ -128,7 +128,7 @@ class GameHandler():
     if player is None:
       raise ResourceNotFoundException("Game not found")
 
-    if ("x" not in coords) or ("y" not in coords) or isinstance(coords["x"], int) or isinstance(coords["y"], int):
+    if ("x" not in coords) or ("y" not in coords) or not isinstance(coords["x"], int) or not isinstance(coords["y"], int):
       raise BadRequestException("Invalid parameters")
 
     world = game.get_world()
