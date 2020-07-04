@@ -13,7 +13,26 @@ h1, h2, h3
   font-family: 'Arbutus Slab', serif;
 }
 
-button
+.inline-button
+{
+  background: none;
+  border: 1px solid #EEEEEE;
+  border-radius: 5px;
+  color: #EEEEEE;
+  cursor: pointer;
+  margin: 2px;
+  padding: 5px;
+  transition: background-color 0.2s;
+}
+
+.inline-button:hover
+{
+  background-color: #2589CB;
+  color: #FFFFFF;
+  border: 1px solid #FFFFFF;
+}
+
+.main-button
 {
   font-family: 'Press Start 2P', cursive;
   padding: 20px;
@@ -24,7 +43,7 @@ button
   box-shadow: inset -4px -4px 0px 0px #227722;
   margin: 6px;
 }
-button:before, button:after 
+.main-button:before, .main-button:after 
 {
   content: '';
   position: absolute;
@@ -32,21 +51,21 @@ button:before, button:after
   height: 100%;
   box-sizing: content-box;
 }
-button:before 
+.main-button:before 
 {
   top: -6px;
   left: 0;
   border-top: 6px black solid;
   border-bottom: 6px black solid;
 }
-button:after 
+.main-button:after 
 {
   left: -6px;
   top: 0;
   border-left: 6px black solid;
   border-right: 6px black solid;
 }
-button:hover
+.main-button:hover
 {
   background-color: #88cc77;
   text-indent: -2px;

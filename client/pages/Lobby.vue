@@ -40,7 +40,7 @@
     </div>
 
     <ErrorBox v-bind:msg="errorMsg"/>
-    <button v-if="gameData.is_host" v-on:click="startGame($event)">
+    <button class="main-button" v-if="gameData.is_host" v-on:click="startGame($event)">
       Start Game
     </button>
     <p v-else>The host will start the game</p>

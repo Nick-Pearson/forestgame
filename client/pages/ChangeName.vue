@@ -4,7 +4,7 @@
     <input type="text" spellcheck="false" v-model="name" placeholder="Player Name"/>
     <p v-bind:class="{invalid: !isValid}" class="char-count">{{charactersUsed}} / {{maxCharacters}} characters</p>
     <ErrorBox v-bind:msg="errorMsg"/>
-    <button v-on:click="changeName($event)">Submit</button>
+    <button class="main-button" v-on:click="changeName($event)">Submit</button>
   </MenuWrapper>
 </template>
 

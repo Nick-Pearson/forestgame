@@ -7,7 +7,7 @@
     <p v-bind:class="{invalid: !isValid}" class="char-count">{{charactersUsed}} / {{maxCharacters}} characters</p>
     <br/>
     <ErrorBox v-bind:msg="errorMsg"/>
-    <button v-on:click="joinGame($event)">Join Game</button>
+    <button class="main-button" v-on:click="joinGame($event)">Join Game</button>
   </MenuWrapper>
 </template>
 

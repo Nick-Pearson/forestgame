@@ -1,16 +1,17 @@
 <template>
   <MenuWrapper>
+    <CookieWarning/>
     <div class="title">
       <span class="subtitle">The</span>
       <h1>Forest Game</h1>
     </div>
     <div class="button-wrapper">
       <router-link to="/create-game">
-        <button class="create-button">Create Game</button>
+        <button class="main-button create-button">Create Game</button>
       </router-link>
       <hr>
       <router-link to="/join-game">
-        <button class="join-button">Join Game</button>
+        <button class="main-button join-button">Join Game</button>
       </router-link>
     </div>
     <footer>
@@ -81,12 +82,14 @@ footer a:hover
 
 <script>
 import MenuWrapper from '../components/MenuWrapper.vue'
+import CookieWarning from '../components/CookieWarning.vue'
 
 export default {
   name: 'Home',
   props: ['version'],
   components: {
-    MenuWrapper
+    MenuWrapper,
+    CookieWarning
   }
 }
 </script>
