@@ -128,7 +128,7 @@ class GameHandler():
     if player is None:
       raise ResourceNotFoundException("Game not found")
 
-    if ("x" not in coords) or ("y" not in coords) or (type(coords["x"]) != int) or (type(coords["y"]) != int):
+    if ("x" not in coords) or ("y" not in coords) or isinstance(coords["x"], int) or isinstance(coords["y"], int):
       raise BadRequestException("Invalid parameters")
 
     world = game.get_world()
@@ -173,7 +173,7 @@ class GameHandler():
     if current_tile != 0 and current_tile != 2:
       raise BadRequestException("Tile is not a clearing")
 
-    if world.get_building_at(x, y) != None:
+    if world.get_building_at(x, y) is not None:
       raise BadRequestException("Tile already contains building")
 
     player.stats.spend(building["cost"])

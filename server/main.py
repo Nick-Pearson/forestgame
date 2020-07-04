@@ -1,6 +1,6 @@
 import json
 
-from flask import Flask, request, abort, send_file, send_from_directory, make_response
+from flask import Flask, request, abort, send_file, send_from_directory
 
 from forestgame.database.sql_database import SQLDatabase
 from forestgame.database.sql_connections import InMemoryConnectionFactory, PostgresConnectionFactory
