@@ -17,7 +17,7 @@ class GetBuildingsTest(unittest.TestCase):
 
     buildings = resp.get("buildings")
     self.assertIsNotNone(buildings)
-  
+
 class GetMapsTest(unittest.TestCase):
   def setUp(self):
     self.handler = StaticDataHandler()

@@ -61,7 +61,7 @@ class World:
     for building in self.__building_data:
       if building["x"] == x and building["y"] == y:
         return building
-    
+
     return None
 
   def get_size_x(self):

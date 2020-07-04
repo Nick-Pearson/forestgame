@@ -26,7 +26,7 @@ class GameHandler():
         (not isinstance(body["max_players"], int))
       ):
       raise BadRequestException("Invalid parameters")
-      
+
     map_inst = get_map_for_id(body["map_id"])
     if map_inst is None:
       raise ResourceNotFoundException("Map not found: " + body["map_id"])
@@ -59,7 +59,7 @@ class GameHandler():
         raise BadRequestException("Game is full")
 
       player = game.add_player(request.client_id)
-    
+
     player.name = name
     player.persist()
 
@@ -194,7 +194,7 @@ class GameHandler():
 
     if game.host != request.client_id:
       raise ForbiddenException("Only the host can start the game")
-    
+
     game.is_lobby = False
     game.persist()
     return {}
