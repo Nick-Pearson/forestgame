@@ -61,7 +61,7 @@ module.exports = {
       "__VERSION__": JSON.stringify(versionId),
     }),
     new FaviconsWebpackPlugin({
-      logo: "client/favicon.png",
+      logo: "./client/favicon.png",
       inject: true,
       icons: {
         favicons: true,
