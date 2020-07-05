@@ -2,6 +2,7 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const webpack = require("webpack");
 const {VueLoaderPlugin} = require("vue-loader");
+const FaviconsWebpackPlugin = require("favicons-webpack-plugin");
 
 const gitCount = require("child_process").execSync("git rev-list HEAD --count").toString().trim();
 const gitTag = require("child_process").execSync("git tag --points-at HEAD").toString().trim();
@@ -58,6 +59,15 @@ module.exports = {
     new VueLoaderPlugin(),
     new webpack.DefinePlugin({
       "__VERSION__": JSON.stringify(versionId),
+    }),
+    new FaviconsWebpackPlugin({
+      logo: "client/favicon.png",
+      inject: true,
+      icons: {
+        favicons: true,
+        firefox: true,
+        windows: true,
+      },
     }),
   ],
 };
