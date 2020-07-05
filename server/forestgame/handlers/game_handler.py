@@ -4,11 +4,14 @@ from forestgame.handlers.handler_exceptions import ForbiddenException
 from forestgame.data.building_data import get_building_for_id
 from forestgame.data.map_data import get_map_for_id
 
+from forestgame.game.event_system import Event
+
 from forestgame.colour import colour_to_hex
 
 class GameHandler():
-  def __init__(self, game_registry):
+  def __init__(self, game_registry, event_system):
     self.game_regsitry = game_registry
+    self.event_system = event_system
 
   def lookup_game(self, game_id):
     game = self.game_regsitry.get_game_for_id(game_id)
@@ -138,6 +141,9 @@ class GameHandler():
     player.stats.wood += 10
     player.persist()
 
+    event = Event("deforest", {}, player.name + " cleared trees")
+    self.event_system.emit_event(event, game_id)
+
     return {}
 
   def action_build(self, request):
@@ -181,6 +187,9 @@ class GameHandler():
     world.set_building_at(x, y, building_id, player.player_id)
     world.set_tile_at(x, y, 0)
     world.persist()
+
+    event = Event("build", {}, player.name + " built a " + building["name"])
+    self.event_system.emit_event(event, game_id)
     return {}
 
   def start_game(self, request):

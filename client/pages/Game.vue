@@ -1,6 +1,7 @@
 <template>
   <div>
     <NestedMenu v-if="showMenu" v-bind:x="menuX" v-bind:y="menuY" v-bind:items="menuItems" v-on:menu-select="menuSelect"/>
+    <EventFeed ref="event-feed"/>
     <canvas ref="main-canvas" class="main-canvas"></canvas>
     <canvas ref="ui-canvas" class="ui-canvas"></canvas>
   </div>
@@ -47,6 +48,7 @@ import {UIRenderer} from "../src/renderer/uirenderer.js";
 import {World} from "../src/world/index.js";
 
 import NestedMenu from "../components/NestedMenu.vue";
+import EventFeed from "../components/EventFeed.vue";
 
 const model = {
   showMenu: false,
@@ -60,6 +62,7 @@ export default
   name: 'Game',
   components: {
     NestedMenu,
+    EventFeed
   },
   methods: {
     "menuSelect": function(event) {
@@ -72,6 +75,9 @@ export default
     const gameId = this.$route.params.gameId;
     const mainCanvas = this.$refs['main-canvas'];
     const uiCanvas = this.$refs['ui-canvas'];
+    const eventFeed = this.$refs['event-feed']
+
+    initWebsocket(gameId);
 
     const game = new ForestGame(gameId, uiCanvas, model);
     model.game = game;
@@ -106,6 +112,10 @@ export default
       setCanvasSize();
     });
     setCanvasSize();
+
+    socket.on('game_event', function(data) {
+      eventFeed.onMessage(data);
+    });
   }
 }
 </script>

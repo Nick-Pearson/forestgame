@@ -14,10 +14,15 @@ GAME_ID = "9ced424f-91c2-47b2-a8ea-6a4bb38f2d2b"
 CLIENT_ID = "6fb8d67c-fee3-437d-9d08-05c27d8a9d15"
 CLIENT_ID_2 = "6fb8d67c-fee3-437d-9d08-05c27d8a9d16"
 
+class MockEventSystem:
+  def emit_event(self, event, game_id):
+    pass
+
 class GameWorldTest(unittest.TestCase):
   def setUp(self):
     self.game_registry = GameRegistry(generate_test_db())
-    self.handler = GameHandler(self.game_registry)
+    self.event_system = MockEventSystem()
+    self.handler = GameHandler(self.game_registry, self.event_system)
 
   def test_get_world_from_non_existant_game_returns_not_found(self):
     with self.assertRaises(ResourceNotFoundException) as context:
@@ -53,7 +58,8 @@ class GameWorldTest(unittest.TestCase):
 class DeforestTest(unittest.TestCase):
   def setUp(self):
     self.game_registry = GameRegistry(generate_test_db())
-    self.handler = GameHandler(self.game_registry)
+    self.event_system = MockEventSystem()
+    self.handler = GameHandler(self.game_registry, self.event_system)
 
   def test_deforest_from_non_existant_game_returns_not_found(self):
     with self.assertRaises(ResourceNotFoundException) as context:
@@ -116,7 +122,8 @@ class DeforestTest(unittest.TestCase):
 class BuildTest(unittest.TestCase):
   def setUp(self):
     self.game_registry = GameRegistry(generate_test_db())
-    self.handler = GameHandler(self.game_registry)
+    self.event_system = MockEventSystem()
+    self.handler = GameHandler(self.game_registry, self.event_system)
 
   def test_build_from_non_existant_game_returns_not_found(self):
     with self.assertRaises(ResourceNotFoundException) as context:
@@ -244,7 +251,8 @@ class BuildTest(unittest.TestCase):
 class CreateGameTest(unittest.TestCase):
   def setUp(self):
     self.game_registry = GameRegistry(generate_test_db())
-    self.handler = GameHandler(self.game_registry)
+    self.event_system = MockEventSystem()
+    self.handler = GameHandler(self.game_registry, self.event_system)
 
   def test_create_game_with_missing_parameters_returns_bad_request(self):
     with self.assertRaises(BadRequestException) as context:
@@ -290,7 +298,8 @@ class CreateGameTest(unittest.TestCase):
 class GetPlayersTest(unittest.TestCase):
   def setUp(self):
     self.game_registry = GameRegistry(generate_test_db())
-    self.handler = GameHandler(self.game_registry)
+    self.event_system = MockEventSystem()
+    self.handler = GameHandler(self.game_registry, self.event_system)
 
   def test_get_players_from_non_existant_game_returns_not_found(self):
     with self.assertRaises(ResourceNotFoundException) as context:
@@ -341,7 +350,8 @@ class GetPlayersTest(unittest.TestCase):
 class GameDataTest(unittest.TestCase):
   def setUp(self):
     self.game_registry = GameRegistry(generate_test_db())
-    self.handler = GameHandler(self.game_registry)
+    self.event_system = MockEventSystem()
+    self.handler = GameHandler(self.game_registry, self.event_system)
 
   def test_get_game_data_from_non_existant_game_returns_not_found(self):
     with self.assertRaises(ResourceNotFoundException) as context:
@@ -373,7 +383,8 @@ class GameDataTest(unittest.TestCase):
 class JoinGameTest(unittest.TestCase):
   def setUp(self):
     self.game_registry = GameRegistry(generate_test_db())
-    self.handler = GameHandler(self.game_registry)
+    self.event_system = MockEventSystem()
+    self.handler = GameHandler(self.game_registry, self.event_system)
 
   def test_join_non_existant_game_returns_not_found(self):
     with self.assertRaises(ResourceNotFoundException) as context:
@@ -454,7 +465,8 @@ class JoinGameTest(unittest.TestCase):
 class StartGameTest(unittest.TestCase):
   def setUp(self):
     self.game_registry = GameRegistry(generate_test_db())
-    self.handler = GameHandler(self.game_registry)
+    self.event_system = MockEventSystem()
+    self.handler = GameHandler(self.game_registry, self.event_system)
 
   def test_start_non_existant_game_returns_not_found(self):
     with self.assertRaises(ResourceNotFoundException) as context:

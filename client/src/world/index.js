@@ -19,6 +19,15 @@ class World
     this.loaded = false;
 
     this.updateWorldData();
+
+    socket.on("build", () =>
+    {
+      this.updateWorldData();
+    });
+    socket.on("deforest", () =>
+    {
+      this.updateWorldData();
+    });
   }
 
   updateWorldData()
